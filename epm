@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.14 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.15 $
 #
 # COPYRIGHT_BEGIN
 #
@@ -99,16 +99,23 @@ class PresenceInfo:
 
 
     def update(self, nfn):
+        """Apply a presence status notification to this buddy.
 
-        update_time = time.time() - float(nfn["Status-Duration"])
+        *nfn*
+        Returns  -- 1 if the user's status was updated, 0 otherwise
+        
+        """
 
-        if update_time > self._time:
-            self._user = nfn["User"]
-            self._time = update_time
-            self._status = nfn.get("Status", None)
-            self._status_text = nfn["Status-Text"]
+        if nfn.has_key("Status"):
+            update_time = time.time() - float(nfn["Status-Duration"])
 
-            return 1
+            if update_time > self._time:
+                self._user = nfn["User"]
+                self._time = update_time
+                self._status = nfn.get("Status", None)
+                self._status_text = nfn["Status-Text"]
+
+                return 1
         
         return 0
 
