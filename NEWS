@@ -1,10 +1,17 @@
 epm news
 --------
 
-x-xxx-2001   david arnold <davida@pobox.com>
-- 0.3 - "xxx"
-  - support for protocol v0.4
+13-Dec-2001   david arnold <davida@pobox.com>
+- 0.3 - "bsd"
+  - new licence: epm/epmd is now available under the terms of the BSD
+    open source licence.
+  - support for protocol draft v0.4 (see the doc directory).
+  - epmd now uses Proxy-Agent header to distinguish its responses from
+    genuine client responses.
+  - epmd does not (yet) respond to Presence-Requests via the Groups
+    values: it only deals with Users.  this needs to be done soonish.
+  - epmd now ignores Presence-Info notifications that are older than
+    its most-recent cached value.
 
 
-
-@(#) $Id: NEWS,v 1.1 2001/12/12 16:15:13 arnold Exp $
+@(#) $Id: NEWS,v 1.2 2001/12/12 18:42:38 arnold Exp $

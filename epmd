@@ -4,11 +4,11 @@
 #              epmd
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epmd,v $
-# Version:     $RCSfile: epmd,v $ $Revision: 1.2 $
-# Copyright:   (C) 2001, David Arnold.
+# Version:     $RCSfile: epmd,v $ $Revision: 1.3 $
 #
 # COPYRIGHT_BEGIN
 #
+# Copyright:   (C) 2001, David Arnold.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ import elvin, os, sha, socket, sys, time
 
 ########################################################################
 
-RELEASE        = "0.1"
+RELEASE        = "0.3"
 WAIT_TIME      = 20.0
 
 GROUPS = None
@@ -59,7 +59,21 @@ SCOPE = None
 ########################################################################
 
 class EPMDaemon:
-    """ """
+    """
+
+    This daemon acts as a proxy for individual presence clients,
+    caching their most-recent Presence-Info, and, should they cease
+    responding, answering Presence-Requests on their behalf.
+
+    Presence-Info events can have four states: "online",
+    "unavailable?", "unavailable", or "offline".  The implication of
+    an "online" status is that the user is present, and available, in
+    which case, you'd expect their presence client to respond on its
+    own behalf.  Consequently, epmd never sends an "online" status,
+    but will re-write the most-recent "online" response (if it was
+    "online") as "unavailable?".
+
+    """
     
     def __init__(self):
         """ """
@@ -71,6 +85,9 @@ class EPMDaemon:
         self._users = {}          # users and their status
         self._debug = 0           # do debug?
 
+        # set proxy identifier
+        self._proxy = "epmd %s / %s" % (RELEASE, socket.gethostname())
+        
         # read config file, if there is one
         cfile = "%s/.epmd" % os.environ.get("HOME", "/")
         if os.path.exists(cfile):
@@ -179,26 +196,29 @@ class EPMDaemon:
 
 
     def handle_presence_rqst(self, sub, nfn, insec, rock):
-        """Handle request for our presence status."""
+        """Handle a request for a user's presence status."""
 
-        user = self._users.get(nfn["User"])
-        
-        # do we know anything about this user?
-        if not user:
-            if nfn["User"] != "*" and self._debug:
-                print "    ignoring request for unknown user", nfn["User"]
-            return
+        for username in nfn["Users"][1:-1].split("|"):
 
-        # have we adopted them?
-        if user._adopted:
-            if self._debug: print "    advertising for adopted user", nfn["User"]
-            user.advertise(nfn)
-            return
+            # lookup user record
+            user = self._users.get(username)
 
-        # start timer
-        else:
-            if self._debug: print "    starting timer for known user", nfn["User"]
-            user._timeout = self._elvin.add_timeout(WAIT_TIME, user.adopt, nfn)
+            # do we know anything about this user?
+            if not user:
+                if self._debug:
+                    print "    ignoring request for unknown user", username
+                return
+
+            # have we adopted them?
+            if user._adopted:
+                if self._debug: print "    advertising for adopted user", username
+                user.advertise(nfn)
+                return
+
+            # start timer
+            else:
+                if self._debug: print "    starting timer for known user", username
+                user._timeout = self._elvin.add_timeout(WAIT_TIME, user.adopt, nfn)
 
         return
 
@@ -207,7 +227,7 @@ class EPMDaemon:
         """Handle advertised presence info."""
 
         # if it's from a proxy, ignore it
-        if nfn.has_key("Proxy"):
+        if nfn.has_key("Proxy-Agent"):
             return
 
         # if we already know about them, update
@@ -228,33 +248,49 @@ class UserStatus:
         self._info = {}
         self._adopted = 0
         self._timeout = None
+        self._timestamp = 0.0
         
         self.set(nfn)
         return
 
 
     def set(self, nfn):
-        """ """
-        
+        """Update the properties of a known user."""
+
+        # is this information more recent than what we have?
+        timestamp = time.time() - float(nfn["Status-Duration"])
+        if timestamp < self._timestamp:
+            if self._daemon._debug:
+                print "    ignoring old status for user ", self._info["User"]
+            return
+
+        # update stored info from this notification
         self._info.update(nfn._attrs)
-        self._timestamp = time.time() - float(nfn["Status-Duration"])
+        self._timestamp = timestamp
+        if self._daemon._debug:
+            print "    got update for user", self._info["User"]
 
-        if self._daemon._debug: print "    got update for user", self._info["User"]
-
+        # if we have adopted this user, drop them again
         if self._adopted:
             if self._daemon._debug: print "*** spurning user", self._info["User"]
             self._adopted = 0
 
+        # if we're still deciding whether to adopt them, stop it, and don't
         if self._timeout:
             if self._daemon._debug: print "    cancelling timer for user", nfn["User"]
             self._daemon._elvin.remove_timeout(self._timeout)
             self._timeout = None
+
         return
 
 
     def adopt(self, timeout, rock):
+        """Handle timeout while waiting for response to request."""
+        
         self._timeout = None
-        if self._daemon._debug: print "*** adopting user", self._info["User"]
+        if self._daemon._debug:
+            print "*** adopting user", self._info["User"]
+
         self._adopted = 1
         self.advertise(rock)
         return
@@ -264,17 +300,23 @@ class UserStatus:
         """Send the recorded status of the user."""
 
         m = elvin.message(self._info)
+
+        # set response id
         m["Presence-Info"] = rqst["Presence-Request"]
+
+        # set duration wrt current time
         m["Status-Duration"] = int(time.time() - self._timestamp)
-        m["Proxy"] = 1
+
+        # flag this response as coming from a proxy
+        m["Proxy-Agent"] = self._daemon._proxy
+
+        # re-write "online" status 
+        if m["Status"] == "online":
+            m["Status"] = "unavailable?"
+
+        # send notification
         self._daemon._elvin.notify(m)
         return
-
-
-
-
-
-
 
 
 ########################################################################

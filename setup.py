@@ -4,11 +4,11 @@
 #              setup.py
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/setup.py,v $
-# Version:     $RCSfile: setup.py,v $ $Revision: 1.1 $
-# Copyright:   (C) 2001, David Arnold.
+# Version:     $RCSfile: setup.py,v $ $Revision: 1.2 $
 #
 # COPYRIGHT_BEGIN
 #
+# Copyright:   (C) 2001, David Arnold.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -45,14 +45,14 @@
 # COPYRIGHT_END
 #############################################################################
 
-__revision__ = "$Revision: 1.1 $"[11:-2]
+__revision__ = "$Revision: 1.2 $"[11:-2]
 
 #############################################################################
 
 from   distutils.core import setup
 
 setup (name="epm",
-       version="0.4",
+       version="0.3",
        description="Elvin Presence Monitor",
        author="David Arnold",
        author_email="elvin@dstc.com",
@@ -62,6 +62,7 @@ setup (name="epm",
        Elvin Presence Protocol, used to determine the availability and other
        information about users on a network.""",
        data_files = [("etc", ["epm.conf"]),
+                     ("doc", ["doc/epp-0.4.html"]),
                      ],
        scripts = ["epm", "epmd"],
        )
