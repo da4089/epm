@@ -4,11 +4,11 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.10 $
-# Copyright:   (C) 2001, David Arnold.
+# Version:     $RCSfile: epm,v $ $Revision: 1.11 $
 #
 # COPYRIGHT_BEGIN
 #
+# Copyright:   (C) 2001, David Arnold.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -49,20 +49,20 @@ import elvin, gtk, os, random, sha, socket, sys, time
 
 ########################################################################
 
+# constants
 RELEASE          = "0.3"
 DEFAULT_STATUS   = ["Online", "Offline", "Unavailable", "Coffee"]
 PROTOCOL_VERSION = 1000
-# default config values
 
+# default config values
 USER       = os.environ.get("USER", os.environ.get("LOGNAME", "Anonymous Coward"))
 DOMAIN     = socket.gethostname()
 GROUPS     = []
-
 SUB_USERS  = []
 SUB_GROUPS = []
-
 STATUS     = []
 
+# usage message
 USAGE = """Usage: epm [options ...]
 
 -e url             Elvin router URL.  You can specify
@@ -437,29 +437,37 @@ class EPM(gtk.GtkWindow):
             # subscribe for Presence-Info from others
             s = 'require(Presence-Info) && ('
 
+            s = s + 'contains(fold-case(Groups), "|%s|"' % self._domain
             for group in self._sub_groups:
-                s = s + 'contains(Groups, "|%s|") || ' % group
-            s = s + 'contains(Groups, "|%s|") ' % self._domain
-
-            for user in self._sub_users:
-                s = s + '|| User == "%s" ' % user
+                s = s + ', "|%s|"' % group.lower()
+            s = s + ')'
+            
+            if self._sub_users:
+                s = s + ' || equals(fold-case(User)'
+                for user in self._sub_users:
+                    s = s + ', "%s"' % user.lower()
+                s = s + ')'
+                
             s = s + ')'
 
             #print
             #print s
+            
             self._sub_info = self._elvin.subscribe(s, 1, None)
             self._sub_info.add_listener(self.handle_presence_info)
             self._sub_info.register()
 
             # subscribe for Presence-Requests from others
-            s = 'require(Presence-Request) && (contains(Users, "|%s@%s|") || (' % \
-                (self._user, self._domain)
+            s = 'require(Presence-Request) && (contains(fold-case(Users), "|%s@%s|") ' % \
+                (self._user.lower(), self._domain.lower())
+            s = s + '|| contains(fold-case(Groups), "|%s|"' % self._domain.lower()
             for group in self._groups:
-                s = s + 'contains(Groups, "|%s|") || ' % group
-            s = s + 'contains(Groups, "|%s|")))' % self._domain
-
+                s = s + ', "|%s|"' % group.lower()
+            s = s + '))'
+            
             #print
             #print s
+            
             self._sub_rqst = self._elvin.subscribe(s, 1, None)
             self._sub_rqst.add_listener(self.handle_presence_rqst)
             self._sub_rqst.register()
