@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.4 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.5 $
 # Copyright:   (C) 2001, David Arnold.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,103 @@ STATUS     = []
 
 
 ########################################################################
+
+class PresenceInfo:
+    def __init__(self, nfn):
+
+        self._time = 0
+        
+        self.update(nfn)
+        return
+
+
+    def update(self, nfn):
+
+        update_time = time.time() - float(nfn["Status-Duration"])
+
+        if update_time > self._time:
+            self._user = nfn["User"]
+            self._time = update_time
+            self._status = nfn.get("Status", None)
+            self._status_text = nfn["Status-Text"]
+
+            return 1
+        
+        return 0
+
+
+    def get_status_text(self):
+        return self._status_text
+
+
+    def get_last_update(self):
+
+        # calculate time
+        status_bits = time.localtime(self._time)
+        now_bits = time.localtime(time.time())
+        midnight = time.mktime((now_bits[0], now_bits[1], now_bits[2], 0,0,0, 0,0,-1))
+
+        if self._time > midnight:
+            offset = "today"
+        elif self._time < midnight and self._time >= midnight - 86400:
+            offset = "yesterday"
+        else:
+            offset = "%u days ago" % int((time.time() - self._time) / 86400.0)
+
+        hour = status_bits[3]
+        if hour > 11:
+            xm = "pm"
+            if hour > 13:
+                hour = hour - 12
+        else:
+            xm = "am"
+            
+        update_time = "% u:%02u%s %s" % (hour, status_bits[4], xm, offset)
+
+        return update_time
+
+
+#############################################################################
+
+class EPMConnectionListener(elvin.ConnectionListener):
+    """ """
+
+    def __init__(self, epm):
+        self._epm = epm
+        self._url = None
+        
+    def established(self, connection, rock):
+        self._url = None
+        self._epm._sb.push(self._epm._sb_ctx,
+                           "Connected to: %s" % \
+                           connection.get_current_router_url().canonical())
+
+    def lost(self, connection, rock):
+        print "Status: lost connection."
+
+    def attempt(self, connection, url, rock):
+        self._url = url
+
+    def attempt_failed(self, connection, url, error, rock):
+        self._epm._sb.push(self._epm._sb_ctx,
+                           "Connection to %s failed (%u)" % \
+                           (self._url.canonical(),
+                            connection.get_current_retry_count()))
+
+    def packets_dropped(self, connection, rock):
+        print "Status: Packets dropped."
+
+    def max_retries(self, connection, retries, rock):
+        self._epm._sb.push(self._epm._sb_ctx, "Reconnection failed!")
+
+    def protocol_error(self, connection, rock):
+        print "Status: Protocol error."
+
+    def reply_timeout(self, connection, rock):
+        print "Status: Reply timed out."
+
+
+#############################################################################
 
 class EPM(gtk.GtkWindow):
     """ """
@@ -180,7 +277,7 @@ class EPM(gtk.GtkWindow):
         if self._scope:
             self._elvin.set_scope(scope)
 
-        self._elvin.open()
+        self._elvin.add_connection_listener(EPMConnectionListener(self))
 
         # initialise window
         gtk.GtkWindow.__init__(self, type=gtk.WINDOW_TOPLEVEL, title="epm")
@@ -225,52 +322,88 @@ class EPM(gtk.GtkWindow):
         bbox.pack_start(b_set, fill=gtk.FALSE, expand=gtk.TRUE, padding=5)
         b_set.connect('button_press_event', self.do_set)
 
-        b_close = gtk.GtkButton('Close')
+        b_close = gtk.GtkButton('Exit')
         b_close.show()
         bbox.pack_start(b_close, fill=gtk.FALSE, expand=gtk.TRUE, padding=5)
         b_close.connect('button_press_event', self.do_close)
 
-        # subscribe for Presence-Info notifications from others
-        s = 'require(Presence-Info) && ('
+        # status bar
+        self._sb = gtk.GtkStatusbar()
+        self._sb_ctx = self._sb.get_context_id("foo")
+        self._sb.push(self._sb_ctx, "Connecting ...")
+        self._sb.set_border_width(5)
+        self._sb.show()
+        vbox.pack_start(self._sb, fill=gtk.FILL_X, expand=gtk.FALSE)
 
-        for group in self._sub_groups:
-            s = s + 'contains(Groups, "|%s|") || ' % group
-        s = s + 'contains(Groups, "|%s|") ' % self._domain
+        self._elvin.add_timeout(1, self.connect, None)
 
-        for user in self._sub_users:
-            s = s + '|| User == "%s" ' % user
-        s = s + ')'
-
-        #print
-        #print s
-        self._sub_info = self._elvin.subscribe(s, 1, None)
-        self._sub_info.add_listener(self.handle_presence_info)
-        self._sub_info.register()
-
-        # subscribe for Presence-Info requests from others
-        s = 'require(Presence-Request) && (contains(Users, "|%s@%s|") || (' % \
-            (self._user, self._domain)
-        for group in self._groups:
-            s = s + 'contains(Groups, "|%s|") || ' % group
-        s = s + 'contains(Groups, "|%s|")))' % self._domain
-            
-        #print
-        #print s
-        self._sub_rqst = self._elvin.subscribe(s, 1, None)
-        self._sub_rqst.add_listener(self.handle_presence_rqst)
-        self._sub_rqst.register()
-
-        # advertise initial status
-        self._change_time = time.time()
-        self.advertise()
-
-        # request info from buddies
-        self.request(self._sub_users, self._sub_groups)
-
-        # show and run
+        # show gui
         self.show()
+
+        # loop forever
         gtk.mainloop()
+        #self._elvin.run()
+        
+        sys.exit()
+        
         return
+
+
+    def connect(self, timeout, rock):
+        """ """
+
+        gtk.threads_enter()
+        
+        # connect to elvin
+        try:
+            self._elvin.open()
+
+        except:
+            print "Connection to Elvin router failed."
+            sys.exit(1)
+
+        if self._elvin.is_open():
+            
+            # subscribe for Presence-Info notifications from others
+            s = 'require(Presence-Info) && ('
+
+            for group in self._sub_groups:
+                s = s + 'contains(Groups, "|%s|") || ' % group
+            s = s + 'contains(Groups, "|%s|") ' % self._domain
+
+            for user in self._sub_users:
+                s = s + '|| User == "%s" ' % user
+            s = s + ')'
+
+            #print
+            #print s
+            self._sub_info = self._elvin.subscribe(s, 1, None)
+            self._sub_info.add_listener(self.handle_presence_info)
+            self._sub_info.register()
+
+            # subscribe for Presence-Info requests from others
+            s = 'require(Presence-Request) && (contains(Users, "|%s@%s|") || (' % \
+                (self._user, self._domain)
+            for group in self._groups:
+                s = s + 'contains(Groups, "|%s|") || ' % group
+            s = s + 'contains(Groups, "|%s|")))' % self._domain
+
+            #print
+            #print s
+            self._sub_rqst = self._elvin.subscribe(s, 1, None)
+            self._sub_rqst.add_listener(self.handle_presence_rqst)
+            self._sub_rqst.register()
+
+            # advertise initial status
+            self._change_time = time.time()
+
+            self.advertise()
+
+            # request info from buddies
+            self.request(self._sub_users, self._sub_groups)
+
+        gtk.threads_leave()
+        return 
 
 
     def do_set(self, button, event):
@@ -316,8 +449,11 @@ class EPM(gtk.GtkWindow):
 
     def do_close(self, button, event):
 
-        self._send_info("update", "offline", "[epm client shutdown]", 0)
-        gtk.mainquit()
+        if self._elvin.is_open():
+            self._send_info("update", "offline", "[epm client shutdown]", 0)
+
+        # use exit not mainquit in case we're in a nested mainloop
+        sys.exit(0)
         return
 
 
@@ -374,52 +510,42 @@ class EPM(gtk.GtkWindow):
     def handle_presence_info(self, sub, nfn, insec, rock):
         """Handle advertised presence info for one of our subscribers."""
 
-        #print nfn["User"]
+        name = nfn["User"]
 
-        # ignore ourselves
-        #if str(nfn["User"]) == "%s@%s" % (self._user, self._domain):
-        #    return
+        if self._buddies.has_key(name):
+            # update existing record
+            buddy = self._buddies[name]
 
-        # calculate time
-        status_duration = float(nfn["Status-Duration"])
-        status_time = time.time() - status_duration
-        status_bits = time.localtime(status_time)
-        now_bits = time.localtime(time.time())
-        midnight = time.mktime((now_bits[0], now_bits[1], now_bits[2], 0,0,0, 0,0,-1))
+            if buddy.update(nfn):
+                self.set_buddy(name, buddy.get_last_update(), buddy.get_status_text())
 
-        if status_time > midnight:
-            offset = "today"
-        elif status_time < midnight and status_time >= midnight - 86400:
-            offset = "yesterday"
         else:
-            offset = "%u days ago" % int(status_duration / 86400.0)
-
-        hour = status_bits[3]
-        if hour > 11:
-            xm = "pm"
-            if hour > 13:
-                hour = hour - 12
-        else:
-            xm = "am"
+            # create new buddy record
+            buddy = PresenceInfo(nfn)
+            self._buddies[name] = buddy
             
-        start_str = "% u:%02u%s %s" % (hour, status_bits[4], xm, offset)
+            self.set_buddy(name, buddy.get_last_update(), buddy.get_status_text())
 
+        return
+
+
+    def set_buddy(self, name, update, status):
         
         row = -1
         for i in range(self._clist.rows):
-            if self._clist.get_text(i, 0) == str(nfn["User"]):
+            if self._clist.get_text(i, 0) == name:
                 row = i
                 break
 
         if row == -1:
-            self._clist.append((str(nfn["User"]),
-                               start_str,
-                               str(nfn["Status-Text"])))
+            self._clist.append((str(name), update, str(status)))
+
         else:
-            self._clist.set_text(row, 1, start_str)
-            self._clist.set_text(row, 2, str(nfn["Status-Text"]))
+            self._clist.set_text(row, 1, update)
+            self._clist.set_text(row, 2, status)
 
         return
+
 
 
 class ChatGroup:
