@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.9 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.10 $
 # Copyright:   (C) 2001, David Arnold.
 #
 # COPYRIGHT_BEGIN
@@ -45,11 +45,11 @@
 # COPYRIGHT_END
 #############################################################################
 
-import elvin, gtk, os, sha, socket, sys, time
+import elvin, gtk, os, random, sha, socket, sys, time
 
 ########################################################################
 
-RELEASE          = "0.2"
+RELEASE          = "0.3"
 DEFAULT_STATUS   = ["Online", "Offline", "Unavailable", "Coffee"]
 PROTOCOL_VERSION = 1000
 # default config values
@@ -62,6 +62,29 @@ SUB_USERS  = []
 SUB_GROUPS = []
 
 STATUS     = []
+
+USAGE = """Usage: epm [options ...]
+
+-e url             Elvin router URL.  You can specify
+--elvin=url        as many URLs as you like, and they'll
+                   be attempted in order.
+-S scope           Scope name.  Only one can be supplied
+--scope=scope      and you can't specify both a scope and
+                   URLs.
+-u user            User's name
+--user=username
+-D domain          Domain name
+--domain=domain
+-G file            Tickertape groups file
+--groups=file
+-d                 Run in daemon mode, as an edesk component
+--daemon
+-v                 Print the version number
+--version
+-h                 Print this usage information
+--help
+
+"""
 
 
 ########################################################################
@@ -188,7 +211,11 @@ class EPM(gtk.GtkWindow):
         self._ticker_groups = ""  # string list of subscribed tickertape groups
 
         self._buddies = {}        # record of buddies' statuses
-        
+
+        s = sha.new()
+        s.update("%f %f" % (time.time(), random.random()))
+        self._id = s.hexdigest()  # Client-ID
+
         # read config file, if there is one
         cfile = "%s/.epm" % os.environ.get("HOME", "/")
         if os.path.exists(cfile):
@@ -199,6 +226,7 @@ class EPM(gtk.GtkWindow):
             #fixme: naughty, naughty
             exec(s)
 
+        # set default values
         self._user = USER
         self._domain = DOMAIN
         self._groups = GROUPS
@@ -383,6 +411,14 @@ class EPM(gtk.GtkWindow):
         return
 
 
+    def usage(self):
+        """Print usage message."""
+
+        sys.stderr.write(USAGE)
+        sys.stderr.flush()
+        return
+
+
     def connect(self, timeout, rock):
         """ """
 
@@ -398,7 +434,7 @@ class EPM(gtk.GtkWindow):
 
         if self._elvin.is_open():
             
-            # subscribe for Presence-Info notifications from others
+            # subscribe for Presence-Info from others
             s = 'require(Presence-Info) && ('
 
             for group in self._sub_groups:
@@ -415,7 +451,7 @@ class EPM(gtk.GtkWindow):
             self._sub_info.add_listener(self.handle_presence_info)
             self._sub_info.register()
 
-            # subscribe for Presence-Info requests from others
+            # subscribe for Presence-Requests from others
             s = 'require(Presence-Request) && (contains(Users, "|%s@%s|") || (' % \
                 (self._user, self._domain)
             for group in self._groups:
@@ -496,6 +532,7 @@ class EPM(gtk.GtkWindow):
 
         m = elvin.message()
         m["Presence-Protocol"] = PROTOCOL_VERSION
+        m["Client-Id"] = self._id
         m["User-Agent"] = "epm v%s (pe-%s/python-%d.%d/%s)" % \
                           (RELEASE,
                            elvin.config.release,
@@ -504,12 +541,14 @@ class EPM(gtk.GtkWindow):
                            os.name == "nt" and os.name or "%s-%s" % (os.uname()[0], os.uname()[2]))
         
         m["User"] = "%s@%s" % (self._user, self._domain)
-        m["Groups"] = reduce(lambda l,i:l+i+"|", self._groups, "|")
+        m["Groups"] = self._groups and reduce(lambda l,i:l+i+"|", self._groups, "|") or ""
         m["Presence-Info"] = xid
         
         if xid != "update":
-            m["Chat-Groups"] = self._ticker_groups
-            m["News-Groups"] = ""
+            if self._ticker_groups != "|":
+                m["Chat-Groups"] = self._ticker_groups
+            if 0:
+                m["News-Groups"] = ""
             m["Ticker-Client"] = "generic"
 
         m["Status"] = status
@@ -522,22 +561,16 @@ class EPM(gtk.GtkWindow):
 
     def request(self, users, groups):
         """Request status from buddies."""
+        #
+        #  requestor is optional in the spec, but we always send it
 
         m = elvin.message()
         m["Presence-Request"] = sha.new(str(time.time()) + str(os.getpid())).hexdigest()
         m["Presence-Protocol"] = 1000
-        m["Groups"] = reduce(lambda l,i:l+i+"|", groups, "|")
-        m["User"] = "*"
+        m["Requestor"] = "%s@%s" % (self._user, self._domain)
+        m["Groups"] = groups and reduce(lambda l,i:l+i+"|", groups, "|") or ""
+        m["Users"] = users and reduce(lambda l,i:l+i+"|", users, "|") or ""
         self._elvin.notify(m)
-
-        m = elvin.message()
-        m["Presence-Request"] = sha.new(str(time.time()) + str(os.getpid())).hexdigest()
-        m["Presence-Protocol"] = 1000
-
-        for user in users:
-            m["User"] = user
-            self._elvin.notify(m)
-
         return
         
         
@@ -628,7 +661,11 @@ class GroupsParser:
         if not file:
             file = "%s/.ticker/groups" % os.environ.get("HOME", "")
 
-        f = open(file)
+        try:
+            f = open(file)
+        except:
+            return groups
+
         while 1:
             line = f.readline()
             if not line:
@@ -651,6 +688,7 @@ class GroupsParser:
             groups.append(g)
 
         f.close()
+
         return groups
             
 
