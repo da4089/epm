@@ -1,0 +1,1745 @@
+<HTML>
+<HEAD>
+<TITLE>Presence specification draft 0.3.1</TITLE>
+<LINK REV="made" HREF="mailto:Matthew.Phillips@dsto.defence.gov.au">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<!--X-Body-Begin-->
+<!--X-User-Header-->
+<!--X-User-Header-End-->
+<!--X-TopPNI-->
+<ADDRESS>Title: <STRONG>Elvin Presence Protocol</STRONG></ADDRESS>
+<TABLE><TR><TD STYLE="A:link { color: blue } A:visited { color: purple } ">
+
+
+
+
+
+<div class=Section1>
+
+<p class=MsoTitle align=left style='text-align:left'><a name="_Toc526853572">Elvin
+Presence Protocol</a></p>
+
+<p class=MsoNormal>Matthew Phillips
+&lt;matthew.phillips@dsto.defence.gov.au&gt;</p>
+
+<p class=MsoNormal>Draft 0.3.1 (<!--[if supportFields]><span style='mso-element:
+field-begin'></span> SAVEDATE \@ &quot;d/MM/yyyy&quot; \* MERGEFORMAT <span
+style='mso-element:field-separator'></span><![endif]-->19/10/2001<!--[if supportFields]><span
+style='mso-element:field-end'></span><![endif]-->)</p>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoNormal><span style='font-size:16.0pt;mso-bidi-font-size:12.0pt'>Contents<o:p></o:p></span></p>
+
+<p class=MsoToc1><!--[if supportFields]><span style='mso-element:field-begin'></span><span
+style="mso-spacerun: yes"> </span>TOC \o &quot;2-2&quot; \h \z \t &quot;Heading
+1,1&quot; <span style='mso-element:field-separator'></span><![endif]--><span
+class=MsoHyperlink><a href="#_Toc528115311">Notes About This Document<span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-tab-count:1 dotted'> </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115311 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>1</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300310031000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span><span
+style='mso-bidi-font-size:12.0pt;font-weight:normal'><o:p></o:p></span></p>
+
+<p class=MsoToc1 style='tab-stops:24.0pt 36.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115312">1<span style='mso-bidi-font-size:
+12.0pt;color:windowtext;font-weight:normal;text-decoration:none;text-underline:
+none'><span style='mso-tab-count:1'>      </span></span>Aim<span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-tab-count:1'>   </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115312 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>2</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300310032000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span><span
+style='mso-bidi-font-size:12.0pt;font-weight:normal'><o:p></o:p></span></p>
+
+<p class=MsoToc1 style='tab-stops:24.0pt 36.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115313">2<span style='mso-bidi-font-size:
+12.0pt;color:windowtext;font-weight:normal;text-decoration:none;text-underline:
+none'><span style='mso-tab-count:1'>        </span></span>Requirements<span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115313 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>2</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300310033000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span><span
+style='mso-bidi-font-size:12.0pt;font-weight:normal'><o:p></o:p></span></p>
+
+<p class=MsoToc1 style='tab-stops:24.0pt 36.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115314">3<span style='mso-bidi-font-size:
+12.0pt;color:windowtext;font-weight:normal;text-decoration:none;text-underline:
+none'><span style='mso-tab-count:1'>        </span></span>Specification<span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115314 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>2</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300310034000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span><span
+style='mso-bidi-font-size:12.0pt;font-weight:normal'><o:p></o:p></span></p>
+
+<p class=MsoToc2 style='tab-stops:36.0pt 54.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115315">3.1<span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>       </span></span>User
+Identity<span style='color:windowtext;display:none;mso-hide:screen;text-decoration:
+none;text-underline:none'><span style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115315 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>2</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300310035000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span></p>
+
+<p class=MsoToc2 style='tab-stops:36.0pt 54.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115316">3.2<span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>       </span></span>Groups<span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115316 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>2</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300310036000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span></p>
+
+<p class=MsoToc2 style='tab-stops:36.0pt 54.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115317">3.3<span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>            </span></span>Operation<span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115317 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>3</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300310037000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span></p>
+
+<p class=MsoToc2 style='tab-stops:36.0pt 54.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115318">3.4<span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>            </span></span>Example
+Exchange<span style='color:windowtext;display:none;mso-hide:screen;text-decoration:
+none;text-underline:none'><span style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115318 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>3</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300310038000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span></p>
+
+<p class=MsoToc2 style='tab-stops:36.0pt 54.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115319">3.5<span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>            </span></span>Example
+With Multiple Groups<span style='color:windowtext;display:none;mso-hide:screen;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115319 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>4</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300310039000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span></p>
+
+<p class=MsoToc2 style='tab-stops:36.0pt 54.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115320">3.6<span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>            </span></span>Presence
+Request Fields<span style='color:windowtext;display:none;mso-hide:screen;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115320 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>6</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300320030000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span></p>
+
+<p class=MsoToc2 style='tab-stops:36.0pt 54.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115321">3.7<span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>            </span></span>Presence
+Info Fields<span style='color:windowtext;display:none;mso-hide:screen;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115321 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>6</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300320031000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span></p>
+
+<p class=MsoToc2 style='tab-stops:36.0pt 54.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115322">3.8<span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>            </span></span>Handling
+Conflicting Presence-Info Responses<span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115322 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>10</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300320032000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span></p>
+
+<p class=MsoToc2 style='tab-stops:36.0pt 54.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115323">3.9<span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>       </span></span>Notes<span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-tab-count:1 dotted'>. </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115323 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>10</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300320033000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span></p>
+
+<p class=MsoToc1 style='tab-stops:24.0pt 36.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115324">4<span style='mso-bidi-font-size:
+12.0pt;color:windowtext;font-weight:normal;text-decoration:none;text-underline:
+none'><span style='mso-tab-count:1'>        </span></span>References<span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115324 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>11</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300320034000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span><span
+style='mso-bidi-font-size:12.0pt;font-weight:normal'><o:p></o:p></span></p>
+
+<p class=MsoToc2 style='tab-stops:36.0pt 54.0pt right dotted 414.8pt'><span
+class=MsoHyperlink><a href="#_Toc528115325">4.1<span style='color:windowtext;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>       </span></span>Other
+Presence Protocols<span style='color:windowtext;display:none;mso-hide:screen;
+text-decoration:none;text-underline:none'><span style='mso-tab-count:1'>  </span></span><!--[if supportFields]><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'><span style='mso-element:field-begin'></span></span><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'> PAGEREF _Toc528115325 \h </span><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-separator'></span></span><![endif]--><span
+style='color:windowtext;display:none;mso-hide:screen;text-decoration:none;
+text-underline:none'>11</span><span style='color:windowtext;display:none;
+mso-hide:screen;text-decoration:none;text-underline:none'><!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F0054006F0063003500320038003100310035003300320035000000</w:data>
+</xml><![endif]--></span><!--[if supportFields]><span style='color:windowtext;
+display:none;mso-hide:screen;text-decoration:none;text-underline:none'><span
+style='mso-element:field-end'></span></span><![endif]--></a></span></p>
+
+<p class=MsoNormal><!--[if supportFields]><span style='mso-element:field-end'></span><![endif]--><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<h1 style='margin-left:0pt;text-indent:0pt;mso-list:none;mso-list-ins:Phillips 20011017T1409;
+tab-stops:36.0pt'><a name="_Toc526853573"></a><a name="_Toc528115311"><span
+style='mso-bookmark:_Toc526853573'><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:10">Note</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:11">s About This Document</ins></span></a><span
+style='mso-bookmark:_Toc526853573'><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:10"><o:p></o:p></ins></span></h1>
+
+<p class=MsoBodyText style='mso-list:none;mso-list-ins:Phillips 20011017T1410'><span
+style='mso-bookmark:_Toc526853573'><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:10">The key words &quot;MUST&quot;, &quot;MUST
+NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
+&quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;,<span
+style="mso-spacerun: yes">  </span>&quot;MAY&quot;, and &quot;OPTIONAL&quot; in
+this document are to be interpreted as described in </ins></span><a
+href="ftp://ftp.ietf.org/rfc/rfc2119.txt"><span style='mso-bookmark:_Toc526853573'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:10"><u>IETF RFC 2119</u></ins></span><span
+style='mso-bookmark:_Toc526853573'></span></a><span style='mso-bookmark:_Toc526853573'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:10">.</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:07"><o:p></o:p></ins></span></p>
+
+<p class=MsoBodyText style='mso-list:none;mso-list-ins:Phillips 20011017T1607'><span
+style='mso-bookmark:_Toc526853573'><ins cite="mailto:Phillips"
+datetime="2001-10-17T16:07">Changes to the previous 0.2 draft </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:08">specification </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:07">are highlighted in green.</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:09"><o:p></o:p></ins></span></p>
+
+<h1 style='mso-list:l8 level1 lfo7;mso-list-change:"%1\:1\:0\:" Phillips 20011017T1440'><span
+style='mso-bookmark:_Toc526853573'><a name="_Toc528115312"><![if !supportLists]>1<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Aim</a></span></h1>
+
+<p class=MsoBodyText>The aim of the presence protocol is to provide a simple
+and flexible means for Elvin users to communicate their presence online and
+publish information they may wish to have known about themselves.</p>
+
+<h1 style='mso-list:l8 level1 lfo7;mso-list-change:"%1\:2\:0\:" Phillips 20011017T1440'><a
+name="_Toc526853574"></a><a name="_Toc528115313"><span style='mso-bookmark:
+_Toc526853574'><![if !supportLists]>2<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Requirements</span></a></h1>
+
+<p class=MsoBodyText>Presence services are already provided to a greater or
+lesser extent by a number of applications, including ‘finger’, CoffeeBiff and
+various Instant Messaging (IM) clients such as Jabber and ICQ.<span
+style="mso-spacerun: yes">  </span>The primary reasons for, and advantages of,
+providing presence information via the Elvin presence protocol are:</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:
+l4 level1 lfo4;mso-list-change:\F0B7 Phillips 20011017T1440;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Does not require centralised, persistent state.</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:
+l4 level1 lfo4;mso-list-change:\F0B7 Phillips 20011017T1440;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Simple and thus easy to support.</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:
+l4 level1 lfo4;mso-list-change:\F0B7 Phillips 20011017T1440;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Separate, but complementary to, ticker messaging.</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:
+l4 level1 lfo4;mso-list-change:\F0B7 Phillips 20011017T1440;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Extensible.</p>
+
+<h1 style='mso-list:l8 level1 lfo7;mso-list-change:"%1\:3\:0\:" Phillips 20011017T1440'><a
+name="_Toc526853575"></a><a name="_Toc528115314"><span style='mso-bookmark:
+_Toc526853575'><![if !supportLists]>3<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Specification</span></a></h1>
+
+<p class=MsoBodyText>This section describes the protocol, including the
+operations between clients and the format of the presence notifications.</p>
+
+<h2 style='mso-list:l8 level2 lfo7;mso-list-change:"%1\:3\:0\:\.%2\:1\:0\:" Phillips 20011017T1440'><a
+name="_Toc526853576"></a><a name="_Toc528115315"><span style='mso-bookmark:
+_Toc526853576'><![if !supportLists]>3.1<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>User Identity</span></a></h2>
+
+<p class=MsoBodyText>The presence protocol assumes that users are identified by
+a combination of <i>name</i> and <i>domain</i>,<i> </i>both of which are
+case-insensitive strings containing any character except ‘@’.<span
+style="mso-spacerun: yes">  </span>The combination of <i>name</i>@<i>domain</i>
+forms a unique <i>user ID</i> for the user in ‘presence space’ in the same
+manner as an email address.</p>
+
+<h2 style='mso-list:l8 level2 lfo7;mso-list-change:"%1\:3\:0\:\.%2\:2\:0\:" Phillips 20011017T1440'><a
+name="_Toc526853577"></a><a name="_Toc528115316"><span style='mso-bookmark:
+_Toc526853577'><![if !supportLists]>3.2<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Groups</span></a></h2>
+
+<p class=MsoBodyText>A group is a namespace containing a set of online
+users.<span style="mso-spacerun: yes">  </span>Every online user <span
+class=msoDel><del cite="mailto:Phillips" datetime="2001-10-17T14:12">will </del></span><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:12">MUST </ins>be in at least
+one group and may opt to be in several.<span style="mso-spacerun: yes"> 
+</span>All users within a group will be aware of each other’s presence by
+default.<span style="mso-spacerun: yes">  </span>A group can be thought of as a
+public, dynamic ‘buddy list’ that is automatically populated with community of
+people.<span style="mso-spacerun: yes">  </span>When users want to add people
+outside their main group to their buddy list, they have two options: explicitly
+add the other user by name, or join the other group.</p>
+
+<p class=MsoBodyText>For example, suppose all the people working in the Frob
+Testing Division of Bob’s Frobs Inc, may elect to be in the ‘ftc.bobco’
+group.<span style="mso-spacerun: yes">   </span>The manager of FTC might also
+elect to be in the ‘management.bobco’ group so they can maintain contact with
+the managers of other divisions.</p>
+
+<p class=MsoBodyText>As well as providing a way to partition presence
+information into communities, the group concept is the key to scalability of
+the presence protocol by making it efficient for clients to subscribe to all
+presence info in a group, knowing this won’t bog down the entire online world.</p>
+
+<h2 style='mso-list:l8 level2 lfo7;mso-list-change:"%1\:3\:0\:\.%2\:3\:0\:" Phillips 20011017T1440'><a
+name="_Toc526853578"></a><a name="_Toc528115317"><span style='mso-bookmark:
+_Toc526853578'><![if !supportLists]>3.3<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Operation</span></a></h2>
+
+<p class=MsoBodyText style='page-break-after:avoid'>The presence protocol
+operates by exchanging two types of notifications:</p>
+
+<p class=MsoBodyText style='margin-left:35.7pt;text-indent:-17.85pt;page-break-after:
+avoid;mso-list:l0 level1 lfo8;mso-list-change:\F0B7 Phillips 20011017T1440;
+tab-stops:list 36.0pt'><![if !supportLists]><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><i>Presence-Info</i>, and</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:
+l0 level1 lfo8;mso-list-change:\F0B7 Phillips 20011017T1440;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><i>Presence-Request</i></p>
+
+<p class=MsoBodyText>Clients use Presence-Info notifications to publish
+presence information about themselves, and use Presence-Request to trigger
+other clients to generate info notifications.</p>
+
+<p class=MsoBodyText>Clients subscribe to Presence-Request notifications, and
+generate Presence-Info notifications in response.<span style="mso-spacerun:
+yes">  </span>Clients also spontaneously emit Presence-Info when they start up
+and when any of the presence information previously published has changed.<span
+style="mso-spacerun: yes">  </span>A number of fields in Presence-Info are
+optional, meaning they may be left out when their values are the same as they
+were in the last full notification.</p>
+
+<h2 style='mso-list:l8 level2 lfo7;mso-list-change:"%1\:3\:0\:\.%2\:4\:0\:" Phillips 20011017T1440'><a
+name="_Toc526853579"></a><a name="_Toc528115318"><span style='mso-bookmark:
+_Toc526853579'><![if !supportLists]>3.4<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Example Exchange</span></a></h2>
+
+<p class=MsoBodyText>Note: see sections <span style='mso-field-code:"REF _Ref525634447 \\r \\h"'>3.6<!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F005200650066003500320035003600330034003400340037000000</w:data>
+</xml><![endif]--></span> &amp; <span style='mso-field-code:"REF _Ref525634448 \\r \\h"'>3.7<!--[if gte mso 9]><xml>
+ <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F005200650066003500320035003600330034003400340038000000</w:data>
+</xml><![endif]--></span> for definitions of the Presence-Request and
+Presence-Info notifications.</p>
+
+<p class=MsoBodyText>Scenario: Zaphod@hitch-hikers is already online.<span
+style="mso-spacerun: yes">  </span>Frodo@hitch-hikers, starts up a
+presence-capable client.<span style="mso-spacerun: yes">  </span>Both are in
+the ‘hitch-hikers’ group.</p>
+
+<p class=MsoBodyText style='page-break-after:avoid'>Frodo initially announces
+he is online with the following full presence info notification:</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;mso-pagination:widow-orphan lines-together;
+tab-stops:162.0pt'><span class=Notification><span style='font-size:11.0pt;
+mso-bidi-font-size:12.0pt;font-family:"Courier New";mso-bidi-font-family:"Times New Roman"'><span
+style="mso-spacerun: yes">    </span>Presence-Info: initial<br>
+Presence-Protocol: 1000<br>
+<span style="mso-spacerun: yes">             </span>User: Frodo@hitch-hikers<br>
+<span style="mso-spacerun: yes">           </span>Groups: |hitch-hikers|<ins
+cite="mailto:Phillips" datetime="2001-10-19T08:41"><br>
+<span style="mso-spacerun: yes">           </span>Status: online</ins><br>
+<span style="mso-spacerun: yes">      </span>Status-Text: Online<br>
+<span style="mso-spacerun: yes">  </span>Status-Duration: 0<br>
+<span style="mso-spacerun: yes">      </span>Chat-Groups: |Chat|ticker-dev|<br>
+<span style="mso-spacerun: yes">      </span>News-Groups:
+|BreakingStories|Slashdot|<br>
+<span style="mso-spacerun: yes">    </span>Ticker-Client: frodoticker 1.0<o:p></o:p></span></span></p>
+
+<p class=MsoBodyText>Zaphod’s client, being subscribed to presence info in for
+the hitch-hikers group, receives the information about Frodo and updates its
+registry.</p>
+
+<p class=MsoBodyText>Frodo’s client now populates its registry by:</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:
+l5 level1 lfo6;mso-list-change:"%1\:1\:0\:\." Phillips 20011017T1440;
+tab-stops:list 36.0pt 90.0pt'><![if !supportLists]>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Subscribing to presence information for the hitch-hikers group
+using the expression:<br>
+<span class=Notification><span style='font-size:11.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";mso-bidi-font-family:"Times New Roman"'>require<ins
+cite="mailto:Phillips" datetime="2001-10-17T14:44"> </ins>(Presence-Info)
+&amp;&amp;</span></span><span class=Notification><span style='mso-ansi-font-size:
+12.0pt;mso-ascii-font-family:"Times New Roman";mso-hansi-font-family:"Times New Roman"'>
+<br>
+<span style="mso-spacerun: yes">    </span></span></span><span
+class=Notification><span style='font-size:11.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";mso-bidi-font-family:"Times New Roman"'>contains<ins
+cite="mailto:Phillips" datetime="2001-10-17T14:44"> </ins>(<ins
+cite="mailto:Phillips" datetime="2001-10-17T13:54">fold-case</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:44"> </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T13:54">(</ins>Groups<ins
+cite="mailto:Phillips" datetime="2001-10-17T13:54">)</ins>, “|hitch-hikers|”)</span></span></p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:
+l5 level1 lfo6;mso-list-change:"%1\:2\:0\:\." Phillips 20011017T1440;
+tab-stops:list 36.0pt 72.0pt'><![if !supportLists]>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Sending a request for presence information about people in the
+current group.<span style="mso-spacerun: yes">  </span>The presence request
+notification Frodo sends is:</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;tab-stops:162.0pt'><span
+class=Notification><span style='font-size:11.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";mso-bidi-font-family:"Times New Roman"'><span
+style="mso-spacerun: yes"> </span>Presence-Request: cafebabe12345<br>
+Presence-Protocol: 1000 <ins cite="mailto:Phillips" datetime="2001-10-17T14:16"><br>
+</ins><ins cite="mailto:Phillips" datetime="2001-10-17T15:54"><span
+style="mso-spacerun: yes">         </span></ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:16">Reqestor: Frodo@hitch-hikers</ins><br>
+<span style="mso-spacerun: yes">           </span>Groups: |hitch-hikers|<br>
+<span style="mso-spacerun: yes">            </span>User<ins
+cite="mailto:Phillips" datetime="2001-10-17T15:17">s</ins>: *<o:p></o:p></span></span></p>
+
+<p class=MsoBodyText>All clients in the group, including Zaphod’s, receive the
+request since they have subscribed using an expression like:</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;mso-list:none;mso-list-ins:Phillips 20011017T1516'><span
+class=Notification><span style='font-size:11.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";mso-bidi-font-family:"Times New Roman"'><ins
+cite="mailto:Phillips" datetime="2001-10-17T15:16">Require (Presence-Request)
+&amp;&amp;<br>
+<span style="mso-spacerun: yes">  </span>(contains (fold-case (Groups),
+“|hitch-hikers|”) ||<br>
+<span style="mso-spacerun: yes">   </span>contains (fold-case (Users),
+“|zaphod@hitch-hikers|”)</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:17">)</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:16"><o:p></o:p></ins></span></span></p>
+
+<p class=MsoBodyText>Zaphod’s client responds with a full presence info
+notification tagged with the request ID from Frodo’s message:</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;mso-pagination:widow-orphan lines-together;
+tab-stops:162.0pt'><span class=Notification><span style='font-size:11.0pt;
+mso-bidi-font-size:12.0pt;font-family:"Courier New";mso-bidi-font-family:"Times New Roman"'><span
+style="mso-spacerun: yes">    </span>Presence-Info: <span class=msoDel><del
+cite="mailto:Phillips" datetime="2001-10-17T15:54">reply </del></span>cafebabe12345<br>
+Presence-Protocol: 1000<br>
+<span style="mso-spacerun: yes">             </span>User: Zaphod@hitch-hikers<br>
+<span style="mso-spacerun: yes">           </span>Groups: |hitch-hikers|<ins
+cite="mailto:Phillips" datetime="2001-10-19T08:42"><br>
+<span style="mso-spacerun: yes">           </span>Status: online</ins><br>
+<span style="mso-spacerun: yes">      </span>Status-Text: Online<ins
+cite="mailto:Phillips" datetime="2001-10-19T08:42"> (going for coffee at 3pm)</ins><br>
+<span style="mso-spacerun: yes">  </span>Status-Duration: 42<br>
+<span style="mso-spacerun: yes">      </span>Chat-Groups: |Chat|ticker-dev|<br>
+<span style="mso-spacerun: yes">      </span>News-Groups:
+|BreakingStories|Slashdot|<br>
+<span style="mso-spacerun: yes">    </span>Ticker-Client: zticker 3.0<br>
+x-Number-Of-Heads: 2<o:p></o:p></span></span></p>
+
+<p class=MsoBodyText>Frodo’s client updates its registry, at which point
+Zaphod, Frodo, and any other interested clients are in sync.</p>
+
+<p class=MsoBodyText>Later, when Zaphod decides to go for coffee, he hits the
+“Coffee!” button on his client, which sends this partial presence notification:</p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;tab-stops:162.0pt'><span
+class=Notification><span style='font-size:11.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";mso-bidi-font-family:"Times New Roman"'><span
+style="mso-spacerun: yes">    </span>Presence-Info: update<br>
+Presence-Protocol: 1000<br>
+<span style="mso-spacerun: yes">             </span>User: Zaphod@hitch-hikers<br>
+<span style="mso-spacerun: yes">           </span>Groups: |hitch-hikers|<ins
+cite="mailto:Phillips" datetime="2001-10-19T08:42"><br>
+<span style="mso-spacerun: yes">           </span>Status: unavailable</ins><br>
+<span style="mso-spacerun: yes">      </span>Status-Text: Coffee!<br>
+<span style="mso-spacerun: yes">  </span>Status-Duration: 0<ins
+cite="mailto:Phillips" datetime="2001-10-17T14:33"><o:p></o:p></ins></span></span></p>
+
+<h2 style='mso-list:l8 level2 lfo7;mso-list-ins:Phillips 20011017T1433'><a
+name="_Toc528115319"><![if !supportLists]>3.5<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]><ins cite="mailto:Phillips" datetime="2001-10-17T14:33">Example
+With Multiple Groups</ins></a><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:33"><o:p></o:p></ins></h2>
+
+<p class=MsoBodyText style='mso-list:none;mso-list-ins:Phillips 20011017T1433'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:34">The previous example assumed
+Frodo was in a single group.<span style="mso-spacerun: yes">  </span>The
+following example (</ins><ins cite="mailto:Phillips" datetime="2001-10-17T15:55">shown
+</ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:34">from Frodo’s end
+only) illustrates how his client would support Frodo being both in the </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:35">‘hitch-hikers’ group and the
+‘hobbits’ group.</ins><ins cite="mailto:Phillips" datetime="2001-10-17T15:55"><span
+style="mso-spacerun: yes">  </span>The key changes from the previous example
+are highlighted in bold.</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:36"><o:p></o:p></ins></p>
+
+<p class=MsoBodyText style='mso-list:none;mso-list-ins:Phillips 20011017T1436'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:36">Frodo’s client would
+announce he is online with:<o:p></o:p></ins></p>
+
+<p class=MsoBodyText style='margin-left:36.0pt;mso-pagination:widow-orphan lines-together;
+mso-list:none;mso-list-ins:Phillips 20011017T1440;tab-stops:162.0pt'><span
+class=Notification><span style='font-size:11.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";mso-bidi-font-family:"Times New Roman"'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:40"><span style="mso-spacerun:
+yes">    </span>Presence-Info: initial<br>
+Presence-Protocol: 1000<br>
+<span style="mso-spacerun: yes">             </span>User: Frodo@hitch-hikers<br>
+<span style="mso-spacerun: yes">           </span><b><span class=msoChangeProp
+style='mso-prop-change:Phillips 20011017T1446'><span class=msoChangeProp
+style='mso-prop-change:Phillips 20011017T1446'>Groups: |hitch-hikers|hobbits|</span></span></b></ins><b><ins
+cite="mailto:Phillips" datetime="2001-10-19T08:43"><br>
+<span style="mso-spacerun: yes">           </span></ins></b><span
+class=msoChangeProp style='mso-prop-change:Phillips 20011019T0843'><ins
+cite="mailto:Phillips" datetime="2001-10-19T08:43"><span class=msoChangeProp
+style='mso-prop-change:Phillips 20011019T0843'>Status: online</span></ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:40"><br>
+<span style="mso-spacerun: yes">      </span>Status-Text: Online<br>
+<span style="mso-spacerun: yes">  </span>Status-Duration: 0<br>
+<span style="mso-spacerun: yes">      </span>Chat-Groups: |Chat|ticker-dev|<br>
+<span style="mso-spacerun: yes">      </span>News-Groups: |BreakingStories|Slashdot|<br>
+<span style="mso-spacerun: yes">    </span>Ticker-Client: frodoticker 1.0<o:p></o:p></ins></span></span></span></p>
+
+<p class=MsoBodyText style='mso-list:none;mso-list-ins:Phillips 20011017T1433'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:47">Frodo’s</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:41"> client subscribe</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:47">s</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:41"> to </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:42">Presence-</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T15:19">Request</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:42"> using </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:46">this expression</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:42">:<o:p></o:p></ins></p>
+
+<pre style='margin-left:28.8pt;mso-list:none;mso-list-ins:Phillips 20011017T1442'><span
+class=Notification><span style='font-size:11.0pt;mso-bidi-font-size:10.0pt'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:43">r</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:42">equire</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:43"> </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:42">(Presence-Request) &amp;&amp;<br>
+<span style="mso-spacerun: yes">  </span><b><span class=msoChangeProp
+style='mso-prop-change:Phillips 20011017T1446'><span class=msoChangeProp
+style='mso-prop-change:Phillips 20011017T1446'>contains (fold-case</span></span></b></ins><b><span
+class=msoChangeProp style='mso-prop-change:Phillips 20011017T1446'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:43"><span class=msoChangeProp
+style='mso-prop-change:Phillips 20011017T1446'> </span></ins><span
+class=msoChangeProp style='mso-prop-change:Phillips 20011017T1446'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:42"><span class=msoChangeProp
+style='mso-prop-change:Phillips 20011017T1446'>(Groups),<span
+class=msoChangeProp style='mso-prop-change:Phillips 20011017T1446'><o:p></o:p></span></span></ins></span></span></b></span></span></pre><pre
+style='margin-left:28.8pt;mso-list:none;mso-list-ins:Phillips 20011017T1445'><span
+class=Notification><b><span style='font-size:11.0pt;mso-bidi-font-size:10.0pt'><span
+class=msoChangeProp style='mso-prop-change:Phillips 20011017T1446'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:45"><span class=msoChangeProp
+style='mso-prop-change:Phillips 20011017T1446'><span style="mso-spacerun: yes">     </span></span></ins><span
+class=msoChangeProp style='mso-prop-change:Phillips 20011017T1446'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:42"><span class=msoChangeProp
+style='mso-prop-change:Phillips 20011017T1446'>“|hitch-hikers|”, </span></ins><span
+class=msoChangeProp style='mso-prop-change:Phillips 20011017T1446'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:43"><span class=msoChangeProp
+style='mso-prop-change:Phillips 20011017T1446'>“|hobbits|”)</span></ins></span></span></span></span></b></span><span
+class=Notification><span style='font-size:11.0pt;mso-bidi-font-size:10.0pt'><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:43"> </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T15:20">||</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:42"><br>
+<span style="mso-spacerun: yes">  </span></ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:12">contains (</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:42">fold-case</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:20"> </ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:42">(User</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:19">s</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:42">), “</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:12">|</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:47">frodo</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:12">@</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:13">hitch-hikers</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:12">|</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:42">”</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:13">)</ins></span></span><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:33"><o:p></o:p></ins></pre></div>
+
+<span style='font-size:12.0pt;font-family:"Times New Roman";mso-fareast-font-family:
+"Times New Roman";mso-ansi-language:EN-AU;mso-fareast-language:EN-US;
+mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always;
+mso-break-type:section-break'>
+</span>
+
+<div class=Section2>
+
+<h2 style='mso-list:l8 level2 lfo7;mso-list-change:"%1\:3\:0\:\.%2\:6\:0\:" Phillips 20011017T1440'><a
+name="_Ref525634447"></a><a name="_Toc526853580"></a><a name="_Toc528115320"><span
+style='mso-bookmark:_Toc526853580'><span style='mso-bookmark:_Ref525634447'><![if !supportLists]>3.6<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Presence Request Fields</span></span></a></h2>
+
+<table border=1 cellspacing=0 cellpadding=0 width="100%" style='width:100.0%;
+ border-collapse:collapse;border:none;mso-border-alt:solid windowtext .5pt;
+ mso-padding-alt:0pt 5.4pt 0pt 5.4pt'>
+ <thead>
+  <tr>
+   <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><b>Field<o:p></o:p></b></p>
+   </td>
+   <td width="8%" valign=top style='width:8.32%;border:solid windowtext .5pt;
+   border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><b>Type<o:p></o:p></b></p>
+   </td>
+   <td width="28%" valign=top style='width:28.86%;border:solid windowtext .5pt;
+   border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><b>Description<o:p></o:p></b></p>
+   </td>
+   <td width="32%" valign=top style='width:32.64%;border:solid windowtext .5pt;
+   border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><b>Possible values<o:p></o:p></b></p>
+   </td>
+   <td width="14%" valign=top style='width:14.18%;border:solid windowtext .5pt;
+   border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><b>When Used<o:p></o:p></b></p>
+   </td>
+  </tr>
+  <tr>
+   <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+   border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Presence-Request</p>
+   </td>
+   <td width="8%" valign=top style='width:8.32%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>String</p>
+   </td>
+   <td width="28%" valign=top style='width:28.86%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Marks the notification as a presence request and
+   carries a request ID.</p>
+   </td>
+   <td width="32%" valign=top style='width:32.64%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>A random, unique request ID, not longer than 255
+   characters, no spaces.<ins cite="mailto:Phillips" datetime="2001-10-17T15:28"><span
+   style="mso-spacerun: yes">  </span>The ID MUST </ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:29">NOT</ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:28"> be “initial</ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:29">” or “update”.</ins></p>
+   </td>
+   <td width="14%" valign=top style='width:14.18%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Always</p>
+   </td>
+  </tr>
+  <tr>
+   <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+   border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Presence-Protocol</p>
+   </td>
+   <td width="8%" valign=top style='width:8.32%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Int32</p>
+   </td>
+   <td width="28%" valign=top style='width:28.86%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Same as Presence-Info</p>
+   </td>
+   <td width="32%" valign=top style='width:32.64%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+   </td>
+   <td width="14%" valign=top style='width:14.18%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Always</p>
+   </td>
+  </tr>
+  <tr style='mso-table-inserted:Phillips 20011017T1450'>
+   <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+   border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T14:50">Requestor<o:p></o:p></ins></p>
+   </td>
+   <td width="8%" valign=top style='width:8.32%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T14:50">String<o:p></o:p></ins></p>
+   </td>
+   <td width="28%" valign=top style='width:28.86%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T14:50">The
+   username of the person requesting the presence information</ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T14:51">.</ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T14:50"><o:p></o:p></ins></p>
+   </td>
+   <td width="32%" valign=top style='width:32.64%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T15:00">A
+   username in <i><span class=msoChangeProp style='mso-prop-change:Phillips 20011017T1501'><span
+   class=msoChangeProp style='mso-prop-change:Phillips 20011017T1501'>user@domain</span></span></i>
+   form</ins><ins cite="mailto:Phillips" datetime="2001-10-17T15:01">.</ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T14:50"><o:p></o:p></ins></p>
+   </td>
+   <td width="14%" valign=top style='width:14.18%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T15:01">Optional</ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T14:50"><o:p></o:p></ins></p>
+   </td>
+  </tr>
+  <tr>
+   <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+   border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Groups</p>
+   </td>
+   <td width="8%" valign=top style='width:8.32%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>String</p>
+   </td>
+   <td width="28%" valign=top style='width:28.86%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><span class=msoDel><del cite="mailto:Phillips"
+   datetime="2001-10-17T15:04">Same as</del></span><span class=msoDel><del
+   cite="mailto:Phillips" datetime="2001-10-17T15:05"> Presence-Info</del></span><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:08"> Allows a client to
+   request status info of all users in a set of groups.</ins></p>
+   </td>
+   <td width="32%" valign=top style='width:32.64%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T15:05">A
+   set of groups in the same format </ins><ins cite="mailto:Phillips"
+   datetime="2001-10-17T15:06">as </ins><ins cite="mailto:Phillips"
+   datetime="2001-10-17T15:05">Presence-Info </ins><ins cite="mailto:Phillips"
+   datetime="2001-10-17T15:07">or </ins><ins cite="mailto:Phillips"
+   datetime="2001-10-17T15:05"><span style="mso-spacerun: yes"> </span>“*’ when
+   the User field contains a </ins><ins cite="mailto:Phillips"
+   datetime="2001-10-17T15:07">specific </ins><ins cite="mailto:Phillips"
+   datetime="2001-10-17T15:05">username.</ins><ins cite="mailto:Phillips"
+   datetime="2001-10-17T15:06"><br>
+   The User and Groups fields </ins><ins cite="mailto:Phillips"
+   datetime="2001-10-17T15:07">MUST NOT both be “*”.</ins></p>
+   </td>
+   <td width="14%" valign=top style='width:14.18%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Always</p>
+   </td>
+  </tr>
+  <tr>
+   <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+   border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>User<ins cite="mailto:Phillips"
+   datetime="2001-10-17T15:10">s</ins></p>
+   </td>
+   <td width="8%" valign=top style='width:8.32%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>String</p>
+   </td>
+   <td width="28%" valign=top style='width:28.86%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Allows a client to request status info of a particular
+   user<ins cite="mailto:Phillips" datetime="2001-10-17T15:10">s</ins> Clients
+   should respond to requests when the “User<ins cite="mailto:Phillips"
+   datetime="2001-10-17T15:10">s</ins>” field <span class=msoDel><del
+   cite="mailto:Phillips" datetime="2001-10-17T15:10">matches </del></span><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:10">contains </ins>their
+   username.</p>
+   </td>
+   <td width="32%" valign=top style='width:32.64%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><span class=msoDel><del cite="mailto:Phillips"
+   datetime="2001-10-17T15:10">A specific username</del></span><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:10">A set of usernames </ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:11">delimited</ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:10"> by </ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:11">“|”</ins> or “*” (any
+   user).<ins cite="mailto:Phillips" datetime="2001-10-17T15:09"><br>
+   </ins><ins cite="mailto:Phillips" datetime="2001-10-17T15:11">Eg “|frodo@home|bob@bobco”</ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:12">.</ins><ins
+   cite="mailto:Phillips" datetime="2001-10-17T15:11"><br>
+   </ins><ins cite="mailto:Phillips" datetime="2001-10-17T15:09">The User and
+   Groups fields MUST NOT both be “*”.</ins><span class=msoDel><del
+   cite="mailto:Phillips" datetime="2001-10-17T15:09"><span
+   style="mso-spacerun: yes">  </span></del></span></p>
+   </td>
+   <td width="14%" valign=top style='width:14.18%;border-top:none;border-left:
+   none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+   mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText>Always</p>
+   </td>
+  </tr>
+ </thead>
+</table>
+
+<p class=MsoNormal><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<h2 style='mso-list:l8 level2 lfo7;mso-list-change:"%1\:3\:0\:\.%2\:7\:0\:" Phillips 20011017T1440'><a
+name="_Ref525634448"></a><a name="_Toc526853581"></a><a name="_Toc528115321"><span
+style='mso-bookmark:_Toc526853581'><span style='mso-bookmark:_Ref525634448'><![if !supportLists]>3.7<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Presence Info Fields</span></span></a></h2>
+
+<table border=1 cellspacing=0 cellpadding=0 width="100%" style='width:100.0%;
+ border-collapse:collapse;border:none;mso-border-alt:solid windowtext .5pt;
+ mso-padding-alt:0pt 5.4pt 0pt 5.4pt'>
+ <thead>
+  <tr>
+   <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+   padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><b>Field<o:p></o:p></b></p>
+   </td>
+   <td width="8%" valign=top style='width:8.36%;border:solid windowtext .5pt;
+   border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><b>Type<o:p></o:p></b></p>
+   </td>
+   <td width="29%" valign=top style='width:29.36%;border:solid windowtext .5pt;
+   border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><b>Description<o:p></o:p></b></p>
+   </td>
+   <td width="33%" valign=top style='width:33.48%;border:solid windowtext .5pt;
+   border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><b>Possible values<o:p></o:p></b></p>
+   </td>
+   <td width="12%" valign=top style='width:12.8%;border:solid windowtext .5pt;
+   border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+   <p class=MsoBodyText><b>When Used<o:p></o:p></b></p>
+   </td>
+  </tr>
+ </thead>
+ <tr>
+  <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Presence-Info</p>
+  </td>
+  <td width="8%" valign=top style='width:8.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>String</p>
+  </td>
+  <td width="29%" valign=top style='width:29.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Marks this as a presence info notification and specifies
+  its subtype</p>
+  </td>
+  <td width="33%" valign=top style='width:33.48%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText style='margin-left:18.0pt;text-indent:-18.0pt;
+  mso-list:l3 level1 lfo2;mso-list-change:\F0B7 Phillips 20011017T1440;
+  tab-stops:list 18.0pt'><![if !supportLists]><span style='font-family:Symbol;
+  mso-bidi-font-style:italic'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span><![endif]>“initial”: Full info, with all fields that the client
+  supports populated.<span style="mso-spacerun: yes">  </span>Generated when
+  the client starts and broadcasts initial presence info.<i><o:p></o:p></i></p>
+  <p class=MsoBodyText style='margin-left:18.0pt;text-indent:-18.0pt;
+  mso-list:l3 level1 lfo2;mso-list-change:\F0B7 Phillips 20011017T1440;
+  tab-stops:list 18.0pt'><![if !supportLists]><span style='font-family:Symbol;
+  mso-bidi-font-style:italic'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span><![endif]>“<span class=msoDel><del cite="mailto:Phillips"
+  datetime="2001-10-17T15:28">reply<span style="mso-spacerun: yes">  </span></del></span><i>request_id”</i>:
+  Full info (all fields that the client supports are populated) in response to
+  a Presence-Request with ID <i>request_id</i>.<i><o:p></o:p></i></p>
+  <p class=MsoBodyText style='margin-left:18.0pt;text-indent:-18.0pt;
+  mso-list:l3 level1 lfo2;mso-list-change:\F0B7 Phillips 20011017T1440;
+  tab-stops:list 18.0pt'><![if !supportLists]><span style='font-family:Symbol;
+  mso-bidi-font-style:italic'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span><![endif]>“update”: Partial info, with only the optional fields
+  that have changed since last update included.<span style="mso-spacerun:
+  yes">  </span>Generated when presence data (eg Status-Text) changes.<i><o:p></o:p></i></p>
+  </td>
+  <td width="12%" valign=top style='width:12.8%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Always</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Presence-Protocol</p>
+  </td>
+  <td width="8%" valign=top style='width:8.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Int32</p>
+  </td>
+  <td width="29%" valign=top style='width:29.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>The version of the presence protocol that is used in
+  this notification.</p>
+  </td>
+  <td width="33%" valign=top style='width:33.48%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText><i><span style="mso-spacerun: yes"> </span>major_version</i>
+  * 1000 + <i>minor_version</i>.<span style="mso-spacerun: yes">  </span>Eg.
+  2001 = version 2.1 of the protocol, 3093 = version 3.93 of the protocol.<span
+  style="mso-spacerun: yes">  </span>The usual compatibility rules for
+  major/minor versions apply: major version number changes indicate
+  incompatible changes to the protocol, minor number increments indicate
+  backward-compatible changes to the protocol.</p>
+  </td>
+  <td width="12%" valign=top style='width:12.8%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Always</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>User</p>
+  </td>
+  <td width="8%" valign=top style='width:8.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>String</p>
+  </td>
+  <td width="29%" valign=top style='width:29.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>The user’s <ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:30">user</ins>name.</p>
+  </td>
+  <td width="33%" valign=top style='width:33.48%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Any <ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:30">username</ins>: eg “mpp<ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:30">@dsto</ins>”, “<ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:30">bob@bobco</ins>”, etc.</p>
+  </td>
+  <td width="12%" valign=top style='width:12.8%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Always</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Groups</p>
+  </td>
+  <td width="8%" valign=top style='width:8.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>String</p>
+  </td>
+  <td width="29%" valign=top style='width:29.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>The groups the user is a member of.</p>
+  </td>
+  <td width="33%" valign=top style='width:33.48%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>A set of group names separated by ‘|’.<br>
+  For example “|dsto|quake heroes|”.<br>
+  Note that the preceding and trailing ‘|’s allow clients to easily use the
+  ‘contains’ function to test for particular groups without having to handle
+  three cases (ie where the group is at the beginning, middle and end of the
+  list).</p>
+  </td>
+  <td width="12%" valign=top style='width:12.8%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Always</p>
+  </td>
+ </tr>
+ <tr style='mso-table-inserted:Phillips 20011017T1536'>
+  <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T15:36">Status<o:p></o:p></ins></p>
+  </td>
+  <td width="8%" valign=top style='width:8.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T15:36">String<o:p></o:p></ins></p>
+  </td>
+  <td width="29%" valign=top style='width:29.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T15:37">The
+  status of the user.</ins><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:36"><o:p></o:p></ins></p>
+  </td>
+  <td width="33%" valign=top style='width:33.48%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText style='margin-left:18.0pt;text-indent:-18.0pt;
+  mso-list:l1 level1 lfo1;mso-list-ins:Phillips 20011017T1537;tab-stops:list 18.0pt'><![if !supportLists]><span
+  style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span><![endif]><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:37">“online”: the user is online and ready to receive
+  messages.<o:p></o:p></ins></p>
+  <p class=MsoBodyText style='margin-left:18.0pt;text-indent:-18.0pt;
+  mso-list:l1 level1 lfo1;mso-list-ins:Phillips 20011017T1538;tab-stops:list 18.0pt'><![if !supportLists]><span
+  style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span><![endif]><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:38">“unavailable”: the user is not currently viewing
+  messages (eg away from desk).<o:p></o:p></ins></p>
+  <p class=MsoBodyText style='margin-left:18.0pt;text-indent:-18.0pt;
+  mso-list:l1 level1 lfo1;mso-list-ins:Phillips 20011017T1538;tab-stops:list 18.0pt'><![if !supportLists]><span
+  style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span><![endif]><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:38">“unavailable?”: the client has automatically set
+  this status based on activity (keystroke/mouse) monitoring</ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:58">, so</ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:39"> this </ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:38">is an educated guess.<o:p></o:p></ins></p>
+  <p class=MsoBodyText style='margin-left:18.0pt;text-indent:-18.0pt;
+  mso-list:l1 level1 lfo1;mso-list-ins:Phillips 20011017T1537;tab-stops:list 18.0pt'><![if !supportLists]><span
+  style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span><![endif]><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:38"><span style="mso-spacerun: yes"> </span></ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:37">“offline”: the user is not
+  currently connected.<span style="mso-spacerun: yes">  </span>This is usually
+  sent as the status when a presence client disconnects.<o:p></o:p></ins></p>
+  <p class=MsoBodyText style='margin-left:18.0pt;text-indent:-18.0pt;
+  mso-list:l1 level1 lfo1;mso-list-ins:Phillips 20011017T1537;tab-stops:list 18.0pt'><![if !supportLists]><span
+  style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span><![endif]><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:38"><span style="mso-spacerun: yes"> </span></ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:37">“coffee”: the user is on a
+  coffee break.<o:p></o:p></ins></p>
+  <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T15:40">The
+  “online”, “offline” and “unavailable” </ins><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:58">settings</ins><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:40"> </ins><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:59">SHOULD</ins><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:40"> be taken into account by the client when merging
+  conflicting notifications: see section </ins><!--[if supportFields]><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:40"><span style='mso-element:
+  field-begin'></span><span style="mso-spacerun: yes"> </span>REF _Ref527966988
+  \r \h <span style='mso-element:field-separator'></span></ins><![endif]--><ins
+  cite="mailto:Phillips" datetime="2001-10-19T08:44">3.8</ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:40"><!--[if gte mso 9]><xml>
+   <w:data>08D0C9EA79F9BACE118C8200AA004BA90B02000000080000000E0000005F005200650066003500320037003900360036003900380038000000</w:data>
+  </xml><![endif]--></ins><!--[if supportFields]><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:40"><span style='mso-element:field-end'></span></ins><![endif]--><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:40"> for a discussion on this.</ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:36"><o:p></o:p></ins></p>
+  </td>
+  <td width="12%" valign=top style='width:12.8%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T15:42">Optional</ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:36"><o:p></o:p></ins></p>
+  </td>
+ </tr>
+ <tr>
+  <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Status-Text</p>
+  </td>
+  <td width="8%" valign=top style='width:8.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>String</p>
+  </td>
+  <td width="29%" valign=top style='width:29.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText><ins cite="mailto:Phillips" datetime="2001-10-17T15:43">T</ins>ext
+  describing the status of the user.</p>
+  </td>
+  <td width="33%" valign=top style='width:33.48%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Any string<ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:41"> </ins><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:42">intended</ins><ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:41"> to be displayed as the current status eg
+  “Online: but will be away this afternoon”.</ins></p>
+  <p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+  </td>
+  <td width="12%" valign=top style='width:12.8%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Optional<ins cite="mailto:Phillips"
+  datetime="2001-10-17T15:42">: required when the Status field is present</ins></p>
+  </td>
+ </tr>
+ <tr>
+  <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Status-Duration</p>
+  </td>
+  <td width="8%" valign=top style='width:8.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Int32</p>
+  </td>
+  <td width="29%" valign=top style='width:29.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>The amount of time (in seconds) that the current status has
+  been in effect.<ins cite="mailto:Phillips" datetime="2001-10-17T14:30"><span
+  style="mso-spacerun: yes">  </span>This is a </ins><ins cite="mailto:Phillips"
+  datetime="2001-10-17T14:31">relative </ins><ins cite="mailto:Phillips"
+  datetime="2001-10-17T14:30">duration rather than an absolute time since the
+  status was set </ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:31">to
+  </ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:30">avoid the </ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T14:31">perennial </ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T14:30">problems with </ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T14:31">inaccurate clocks and time</ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T15:59"> </ins><ins
+  cite="mailto:Phillips" datetime="2001-10-17T14:31">zones.</ins></p>
+  </td>
+  <td width="33%" valign=top style='width:33.48%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Any integer &gt;= 0.<span style="mso-spacerun: yes"> 
+  </span>Undefined behaviour if anyone holds the same status longer than 136
+  years ;) (2<sup>32</sup> seconds)</p>
+  </td>
+  <td width="12%" valign=top style='width:12.8%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Optional: required when Status field is present</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Chat-Groups</p>
+  </td>
+  <td width="8%" valign=top style='width:8.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>String</p>
+  </td>
+  <td width="29%" valign=top style='width:29.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>The set of chat groups the user is subscribed to.</p>
+  </td>
+  <td width="33%" valign=top style='width:33.48%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Eg. “|Chat|ticker-dev|”</p>
+  </td>
+  <td width="12%" valign=top style='width:12.8%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Optional</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>News-Groups</p>
+  </td>
+  <td width="8%" valign=top style='width:8.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>String</p>
+  </td>
+  <td width="29%" valign=top style='width:29.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>The set of news groups the user is subscribed to.</p>
+  </td>
+  <td width="33%" valign=top style='width:33.48%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Eg. “|BreakingStories|Slashdot|”</p>
+  </td>
+  <td width="12%" valign=top style='width:12.8%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Optional</p>
+  </td>
+ </tr>
+ <tr>
+  <td width="16%" valign=top style='width:16.0%;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Ticker-Client</p>
+  </td>
+  <td width="8%" valign=top style='width:8.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>String</p>
+  </td>
+  <td width="29%" valign=top style='width:29.36%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>The ticker client the user is running</p>
+  </td>
+  <td width="33%" valign=top style='width:33.48%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>A ticker client name and version eg “sticker 2.0.1”,
+  “xtickertape 2.0a”.<span style="mso-spacerun: yes">  </span>A missing value
+  indicates the user is not running a ticker client.<span style="mso-spacerun:
+  yes">  </span>Users that are running ticker that don’t wish the type of
+  client to be known should use “generic”.</p>
+  </td>
+  <td width="12%" valign=top style='width:12.8%;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>Optional</p>
+  </td>
+ </tr>
+</table>
+
+</div>
+
+<span style='font-size:12.0pt;font-family:"Times New Roman";mso-fareast-font-family:
+"Times New Roman";mso-ansi-language:EN-AU;mso-fareast-language:EN-US;
+mso-bidi-language:AR-SA'><br clear=all style='page-break-before:always;
+mso-break-type:section-break'>
+</span>
+
+<div class=Section3>
+
+<h2 style='mso-list:l8 level2 lfo7;mso-list-ins:Phillips 20011017T1426'><a
+name="_Toc526853582"></a><a name="_Ref527966988"></a><a name="_Toc528115322"><span
+style='mso-bookmark:_Ref527966988'><span style='mso-bookmark:_Toc526853582'><![if !supportLists]>3.8<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]><ins cite="mailto:Phillips" datetime="2001-10-17T14:26">Handling
+Conflicting Presence-Info Responses</ins></span></span></a><span
+style='mso-bookmark:_Toc526853582'><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:26"><o:p></o:p></ins></span></h2>
+
+<p class=MsoBodyText style='mso-list:none;mso-list-ins:Phillips 20011017T1426'><span
+style='mso-bookmark:_Toc526853582'><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:26">Clients </ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:59">SHOULD</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:26"> handle </ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T15:59">the </ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:26">situation where multiple Presence-Info responses
+are received for single user</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T16:00"> by using the precedence of the Status fields</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">.<span style="mso-spacerun:
+yes">  </span>For example, in the case where a user is running two clients on
+two hosts, one of </ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:27">which</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26"> is listing the user as “</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:00">u</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">navailable</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:00">?</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">”, the other which lists the
+user as “</ins><ins cite="mailto:Phillips" datetime="2001-10-17T16:00">o</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">nline”, Presence-Requests
+will generate two responses.<span style="mso-spacerun: yes">  </span>In this
+case, clients </ins><ins cite="mailto:Phillips" datetime="2001-10-17T16:01">SHOULD</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26"> </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:01">clearly </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:28">give precedence to </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">the information in the “</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:01">o</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">nline” response over the “</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:01">i</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">nactive</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:01">?</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">”.<span style="mso-spacerun:
+yes">  </span>The order of precedence is<span style="mso-spacerun: yes"> 
+</span>“</ins><ins cite="mailto:Phillips" datetime="2001-10-17T16:01">o</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">nline”, “</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:02">unavailable</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">”</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:02">, “unavailable?” </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">and “</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:01">offline</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">”, with other statuses being
+</ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:27">equal </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:26">bottom of the order.<o:p></o:p></ins></span></p>
+
+<h2 style='mso-list:l8 level2 lfo7;mso-list-change:"%1\:3\:0\:\.%2\:9\:0\:" Phillips 20011017T1440'><span
+style='mso-bookmark:_Toc526853582'><a name="_Toc528115323"><![if !supportLists]>3.9<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Notes</a></span></h2>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l7 level1 lfo9;
+mso-list-change:\F0B7 Phillips 20011017T1440;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Presence-Info: the values of this field have been
+designed so that clients can easily discern the derivation of updates if they
+wish (for efficiency or otherwise).<span style="mso-spacerun: yes"> 
+</span>However, clients are not required to distinguish between the different
+types of Status-Info notification: simply updating a registry with the new data
+in any Presence-Info notification is sufficient, so long as missing optional
+fields are handled.<br>
+<br>
+Note that one possible efficiency enabled by this approach is the ability to
+opt out of redundant “reply” updates in response to a Presence-Request from
+other clients, using the expression <span class=Notification><span
+style='font-size:11.0pt;mso-bidi-font-size:12.0pt;font-family:"Courier New";
+mso-bidi-font-family:"Times New Roman"'>Status-Info != “reply”</span></span>.<span
+style="mso-spacerun: yes">  </span>The other obvious way to mark replies to
+status requests -- with a separate “In-Reply-To” field -- makes this difficult,
+since <span class=Notification><span style='font-size:11.0pt;mso-bidi-font-size:
+12.0pt;font-family:"Courier New";mso-bidi-font-family:"Times New Roman"'>!require
+(In-Reply-To)</span></span> can’t be used to create the same effect due to the
+tri-state logic used in the Elvin subscription language.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l7 level1 lfo9;
+mso-list-change:\F0B7 Phillips 20011017T1440;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Presence-Protocol: this is designed so that clients can
+subscribe to known protocol sets eg “<span class=Notification><span
+style='font-size:11.0pt;mso-bidi-font-size:12.0pt;font-family:"Courier New";
+mso-bidi-font-family:"Times New Roman"'>Protocol-Version &gt;= 1000 &amp;&amp;
+Protocol-Version &lt; 3000</span></span>” picks up any 1.x or 2.x protocol
+notifications.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l7 level1 lfo9;
+mso-list-change:\F0B7 Phillips 20011017T1440;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>It is assumed that, if the user is running a ticker
+client, then they are subscribed to their ‘personal’ chat group with the same
+name as their user ID ie “user@domain”.<span style="mso-spacerun: yes"> 
+</span>This convention makes it obvious how to send a ticker message to someone
+visible via the presence system.</p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l7 level1 lfo9;
+mso-list-change:\F0B7 Phillips 20011017T1440;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]>Non-standard fields should use the “x-” naming
+convention eg “x-Phone-Number”, “x-Organisation”, etc.<span
+style="mso-spacerun: yes">  </span>Ideally, clients should provide an option to
+display the non-standard fields.<ins cite="mailto:Phillips"
+datetime="2001-10-17T13:46"><o:p></o:p></ins></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l7 level1 lfo9;
+mso-list-ins:Phillips 20011017T1611;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><ins cite="mailto:Phillips" datetime="2001-10-17T16:02">Treating
+</ins><ins cite="mailto:Phillips" datetime="2001-10-17T16:03">usernames or
+groups as </ins><ins cite="mailto:Phillips" datetime="2001-10-17T13:47">case-sensitive
+</ins><ins cite="mailto:Phillips" datetime="2001-10-17T13:48">runs the risk of
+people not seeing each other because they got the case wrong eg I look for
+‘bob@bobco’ and fail to see him because he is really </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T13:49">‘Bob@BobCo’.</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:54"><o:p></o:p></ins></p>
+
+<p class=MsoNormal style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l7 level1 lfo9;
+mso-list-ins:Phillips 20011017T1611;tab-stops:list 36.0pt'><![if !supportLists]><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><ins cite="mailto:Phillips" datetime="2001-10-17T14:54">Requestor
+field: this </ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:58">was
+initially </ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:54">intended
+to allow clients to respond differently depending on the requestor, eg </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:57">subscription</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T16:03">s</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:57"> to some groups might be
+hidden except to certain people</ins><ins cite="mailto:Phillips"
+datetime="2001-10-17T14:55">.<span style="mso-spacerun: yes">  </span></ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:58">But s</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:55">ince any client can listen
+in to the replies, </ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:58">it
+</ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:55">would </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:59">not </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:55">be a </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:57">particularly useful </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:56">way of hiding information (using
+</ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:59">the </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:56">security </ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T14:59">API’s would make more sense)</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T15:00">.<span style="mso-spacerun:
+yes">  </span></ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:59">It
+is left in </ins><ins cite="mailto:Phillips" datetime="2001-10-17T16:03">the
+specification </ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:59">but
+made optional</ins><ins cite="mailto:Phillips" datetime="2001-10-17T14:56">.</ins><ins
+cite="mailto:Phillips" datetime="2001-10-17T13:46"><o:p></o:p></ins></p>
+
+<h1 style='mso-list:l8 level1 lfo7;mso-list-change:"%1\:4\:0\:" Phillips 20011017T1440'><a
+name="_Toc526853583"></a><a name="_Toc528115324"><span style='mso-bookmark:
+_Toc526853583'><![if !supportLists]>4<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>References</span></a></h1>
+
+<h2 style='mso-list:l8 level2 lfo7;mso-list-change:"%1\:4\:0\:\.%2\:1\:0\:" Phillips 20011017T1440'><a
+name="_Toc526853584"></a><a name="_Toc528115325"><span style='mso-bookmark:
+_Toc526853584'><![if !supportLists]>4.1<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Other Presence Protocols</span></a></h2>
+
+<p class=MsoBodyText>Thanks to David Arnold for providing the initial set of
+links that these references are based on.</p>
+
+<h3 style='mso-list:l8 level3 lfo7;mso-list-change:"%1\:4\:0\:\.%2\:1\:0\:\.%3\:1\:0\:" Phillips 20011017T1440'><![if !supportLists]>4.1.1<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Simple General Awareness Protocol (SGAP)</h3>
+
+<p class=MsoBodyText>A Lotus-sponsored <a
+href="http://www.lotus.com/lotus/research.nsf/2b4f81291401771785256976004a8d13/86975a452540f46c8525661e0051904d/$FILE/sgap4.htm">IETF
+Internet Draft</a>, which expired on May 98.<span style="mso-spacerun: yes"> 
+</span>It’s not clear if this is still a live project.<span
+style="mso-spacerun: yes">  </span>Specification talks mainly about
+client/server interactions and message formats.<span style="mso-spacerun:
+yes">  </span>Seems to offer little wisdom for this specification.</p>
+
+<p class=MsoBodyText>Also see <a
+href="http://www.lotus.com/lotus/research.nsf/e2fedcc34342c897852568bd001274fd/08f78fa390138578852565c500701d11?OpenDocument">Lotus
+Research Page</a> for more information.</p>
+
+<h3 style='mso-list:l8 level3 lfo7;mso-list-change:"%1\:4\:0\:\.%2\:1\:0\:\.%3\:2\:0\:" Phillips 20011017T1440'><![if !supportLists]>4.1.2<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Instant Messaging and Presence Protocol (IMPP)</h3>
+
+<p class=MsoBodyText>Uses presence information messages (MIME type
+message/cpim) that contain an XML presence info ‘payload’.</p>
+
+<p class=MsoBodyText>Example payload (from <a
+href="http://www.ietf.org/internet-drafts/draft-ietf-impp-cpim-pidf-00.txt">IMPP
+internet draft</a>):</p>
+
+<pre><span style="mso-spacerun: yes">    </span>&lt;presence xmlns=&quot;http://www.ietf.org/ns/cpim-pidf-xml-1.0&quot;&gt;</pre><pre><span style="mso-spacerun: yes">     </span>&lt;tuple name=&quot;im-1&quot;&gt;</pre><pre><span style="mso-spacerun: yes">       </span>&lt;status&gt;</pre><pre><span style="mso-spacerun: yes">         </span>&lt;value&gt;open&lt;/value&gt;</pre><pre><span style="mso-spacerun: yes">         </span>&lt;detail type=&quot;im&quot;</pre><pre><span style="mso-spacerun: yes">                 </span>schema=&quot;http://www.ietf.org/dtd/im-type-im.dtd&quot;&gt;</pre><pre><span style="mso-spacerun: yes">            </span>away</pre><pre><span
+style='mso-tab-count:1'>        </span> &lt;/detail&gt;</pre><pre><span style="mso-spacerun: yes">       </span>&lt;/status&gt;</pre><pre><span style="mso-spacerun: yes">       </span>&lt;contact priority=&quot;2&quot;&gt;im:shingo@jp.fujitsu.com&lt;/contact&gt;</pre><pre><span style="mso-spacerun: yes">       </span>&lt;note&gt;I'll be in Tokyo tomorrow&lt;/note&gt;</pre><pre><span style="mso-spacerun: yes">     </span>&lt;/tuple&gt;</pre><pre><span style="mso-spacerun: yes">     </span>&lt;tuple name=&quot;email&quot;&gt;</pre><pre><span style="mso-spacerun: yes">       </span>&lt;status&gt;</pre><pre><span style="mso-spacerun: yes">         </span>&lt;value&gt;open&lt;/value&gt;</pre><pre><span style="mso-spacerun: yes">       </span>&lt;/status&gt;</pre><pre><span style="mso-spacerun: yes">       </span>&lt;contact priority=&quot;1&quot;&gt;mailto:shingo@jp.fujitsu.com&lt;/contact&gt;</pre><pre><span style="mso-spacerun: yes">     </span>&lt;/tuple&gt;</pre><pre><span style="mso-spacerun: yes">   </span>&lt;/presence&gt;<span style="mso-spacerun: yes">   </span></pre>
+
+<p class=MsoBodyText><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></p>
+
+<p class=MsoBodyText>The main wisdom to be gained here is that the presence
+info is divided into one or more contact tuples, which describe the users’
+status in a particular online medium.<span style="mso-spacerun: yes"> 
+</span>In the example, the user is saying they have both Instant Messaging and
+email contacts, but are not online for IM.<span style="mso-spacerun: yes"> 
+</span>The addition of the note to the IM tuple presumably informs interested
+parties that the person will be available for chat the next day.<span
+style="mso-spacerun: yes">  </span>The Status-Text field of this protocol gives
+some of this functionality, but we are really assuming that ticker is the main
+messaging method.<span style="mso-spacerun: yes">  </span>Email addresses and other
+info can be supplied as an “x-” field.</p>
+
+<p class=MsoBodyText>For more info see <a
+href="http://www.ietf.org/html.charters/impp-charter.html">IMPP charter page</a>,
+<a href="http://www.imppwg.org/">IMPP main page</a>, <a
+href="http://www.ietf.org/ids.by.wg/impp.html">IMPP working group pages</a> and
+<a
+href="http://www.lotus.com/lotus/research.nsf/e2fedcc34342c897852568bd001274fd/989718b8a6d016228525668a00632987?OpenDocument">Lotus
+Research</a>.</p>
+
+<h3 style='mso-list:l8 level3 lfo7;mso-list-change:"%1\:4\:0\:\.%2\:1\:0\:\.%3\:3\:0\:" Phillips 20011017T1440'><![if !supportLists]>4.1.3<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>Jabber</h3>
+
+<p class=MsoBodyText>Jabber is an IM/presence service built from a series of
+federated servers.<span style="mso-spacerun: yes">  </span>The protocol is open
+and there are a number of open-source clients.<span style="mso-spacerun: yes"> 
+</span>A free trialware server for up to 100 users is available, but a
+commercial license is needed for larger numbers of users.</p>
+
+<p class=MsoBodyText>The XML-based <a
+href="http://docs.jabber.org/general/html/protocol.html">Jabber protocol</a>
+includes a presence message type.<span style="mso-spacerun: yes"> 
+</span>Example (from protocol page):</p>
+
+<pre><span style="mso-spacerun: yes">  </span>&lt;presence </pre><pre><span style="mso-spacerun: yes">      </span>to=&quot;romeo@montague.com/orchard&quot;</pre><pre><span style="mso-spacerun: yes">      </span>from=&quot;juliet@capulet.com/balcony&quot;&gt;</pre><pre><span style="mso-spacerun: yes">    </span>&lt;status&gt;Stay but a little, I will come again.&lt;/status&gt;</pre><pre><span style="mso-spacerun: yes">    </span>&lt;show&gt;away&lt;/show&gt;</pre><pre><span style="mso-spacerun: yes">  </span>&lt;/presence&gt;</pre><pre><![if !supportEmptyParas]>&nbsp;<![endif]><o:p></o:p></pre>
+
+<p class=MsoBodyText style='margin-bottom:12.0pt'>The distinction between
+‘show’ and ‘status’ is interesting.<span style="mso-spacerun: yes"> 
+</span>Status is user-readable text and is used in the same way the protocol in
+this document.<span style="mso-spacerun: yes">  </span>‘Show’ can be:</p>
+
+<table border=1 cellspacing=0 cellpadding=0 style='margin-left:30.35pt;
+ border-collapse:collapse;border:none;mso-border-alt:solid windowtext .5pt;
+ mso-padding-alt:0pt 5.4pt 0pt 5.4pt'>
+ <tr>
+  <td width=56 valign=top style='width:42.15pt;border:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>chat</p>
+  </td>
+  <td width=472 valign=top style='width:353.9pt;border:solid windowtext .5pt;
+  border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>The client is available for immediate contact.</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=56 valign=top style='width:42.15pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>away</p>
+  </td>
+  <td width=472 valign=top style='width:353.9pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p>The client is online, but is momentarily away (e.g., at lunch or a
+  meeting).</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=56 valign=top style='width:42.15pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>xa</p>
+  </td>
+  <td width=472 valign=top style='width:353.9pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p>The client is online, but has been inactive for a long time.</p>
+  </td>
+ </tr>
+ <tr>
+  <td width=56 valign=top style='width:42.15pt;border:solid windowtext .5pt;
+  border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0pt 5.4pt 0pt 5.4pt'>
+  <p class=MsoBodyText>dnd</p>
+  </td>
+  <td width=472 valign=top style='width:353.9pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;
+  mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;
+  padding:0pt 5.4pt 0pt 5.4pt'>
+  <p>The client is in Do Not Disturb mode.</p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoBodyText style='margin-top:12.0pt'>The Elvin presence protocol
+currently overloads <i>show</i> and <i>status</i> into the ‘Status’ field eg
+“Unavailable (at meeting in rm 56)” is the same as Jabber show = “away” +
+status = “at meeting in rm 56”.<span style="mso-spacerun: yes">  </span>We may
+want to consider following the Jabber example.</p>
+
+<p class=MsoBodyText>Jabber also has an “iq” message format can be used to
+exchange extended information.</p>
+
+<p class=MsoBodyText>See <a href="http://www.jabber.org/">home page</a>, <a
+href="http://www.jabber.com/">main commercial page</a>, <a
+href="http://www.jabbercentral.org/">Jabber Central news page</a></p>
+
+<h3 style='mso-list:l8 level3 lfo7;mso-list-change:"%1\:4\:0\:\.%2\:1\:0\:\.%3\:4\:0\:" Phillips 20011017T1440'><![if !supportLists]>4.1.4<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><![endif]>ICQ</h3>
+
+<p class=MsoBodyText>The <a href="http://www.algonet.se/~henisak/icq/icqv5.html">ICQ
+v5 protocol</a> allows a range of, non-extensible (?) information about a user
+to be published using the CMD_META_USER message such as name, phone, age, city
+etc.<span style="mso-spacerun: yes">  </span>This sort of information could be
+accommodated by the Elvin presence protocol using x-Name, x-Phone etc.</p>
+
+<p class=MsoBodyText style='mso-list:none;mso-list-ins:"Matthew Phillips" 20011002T1040'>See
+<a href="http://www.d.kth.se/~d95-mih/icq/">ICQ protocol site</a>.</p>
+
+</div>
+
+</TD></TR></TABLE>
+</BODY>
+</HTML>
