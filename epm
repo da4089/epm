@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.8 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.9 $
 # Copyright:   (C) 2001, David Arnold.
 #
 # COPYRIGHT_BEGIN
@@ -110,7 +110,7 @@ class PresenceInfo:
         elif self._time < midnight and self._time >= (midnight - 86400):
             offset = "yesterday"
         else:
-            offset = "%u days ago" % int((midnight - self._time) / 86400.0) + 1
+            offset = "%u days ago" % (int((midnight - self._time) / 86400.0) + 1)
 
         hour = status_bits[3]
         if hour > 11:
