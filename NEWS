@@ -1,5 +1,12 @@
 epm news
 --------
+xx-Apr-2002   david arnold <davida@pobox.com>
+- 0.4 - "xxx"
+  - expanded status information, including ability to set
+    unavailable/offline statuses
+  - display of unavailable?/unavailable/offline status for received
+    presence
+  - support for external presence monitoring, as provided by xipd
 
 13-Dec-2001   david arnold <davida@pobox.com>
 - 0.3 - "bsd"
@@ -14,4 +21,4 @@ epm news
     its most-recent cached value.
 
 
-@(#) $Id: NEWS,v 1.2 2001/12/12 18:42:38 arnold Exp $
+@(#) $Id: NEWS,v 1.3 2002/04/03 08:14:47 arnold Exp $

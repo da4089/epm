@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.15 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.16 $
 #
 # COPYRIGHT_BEGIN
 #
@@ -50,9 +50,14 @@ import elvin, gtk, os, random, sha, socket, sys, time
 ########################################################################
 
 # constants
-RELEASE          = "0.3"
+RELEASE          = "0.4"
 DEFAULT_STATUS   = ["Online", "Offline", "Unavailable", "Coffee"]
 PROTOCOL_VERSION = 1000
+
+STATUS_ONLINE      = "online"
+STATUS_DOUBTFUL    = "unavailable?"
+STATUS_UNAVAILABLE = "unavailable"
+STATUS_OFFLINE     = "offline"
 
 # default config values
 USER       = os.environ.get("USER", os.environ.get("LOGNAME", "Anonymous Coward"))
@@ -90,21 +95,49 @@ USAGE = """Usage: epm [options ...]
 ########################################################################
 
 class PresenceInfo:
-    def __init__(self, nfn):
-
-        self._time = 0
+    """Presence information for an entity."""
+    
+    def __init__(self, nfn=None):
+        """Create a presence record."""
         
-        self.update(nfn)
+        # base state
+        self._user = None
+        self._status = None
+        self._status_text = None
+        self._time = 0
+
+        # apply initial info
+        if nfn:
+            self.update(nfn)
+            
         return
 
 
     def update(self, nfn):
         """Apply a presence status notification to this buddy.
 
-        *nfn*
+        *nfn*    -- a Presence-Info notification
         Returns  -- 1 if the user's status was updated, 0 otherwise
-        
-        """
+
+        Status updates are applied according to two principles: more
+        recent information overrides older information, AND, more
+        active information overrides less active information.
+
+        Combining these two is tricky.  According to section 3.8 of
+        the spec, conflicts should be resolved using the activity
+        level.  However, this does not cater for providers that
+        continue to advertise an "online" presence misleadingly.
+
+        Accordingly, our policy is twofold:
+
+        The most active status will always be accepted, but a more
+        recent status will override an older status at the same
+        activity level.
+
+        Secondly, a status notified by a client (as identified by its
+        Client-Id) that now fails to respond to Presence-Requests will
+        be discarded where a competing status is available, and
+        several requests have failed to elicit a response."""
 
         if nfn.has_key("Status"):
             update_time = time.time() - float(nfn["Status-Duration"])
