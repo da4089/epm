@@ -1,0 +1,12 @@
+TODO
+
+- add private protocol interface to accept activity updates from
+  external applications.  is this a case for eDesk? no?
+
+- replace config file parser with something other than exec() (!)
+
+- add GUI configuration interface
+
+
+
+$Id: TODO,v 1.1 2002/04/04 02:59:37 arnold Exp $

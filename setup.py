@@ -4,7 +4,7 @@
 #              setup.py
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/setup.py,v $
-# Version:     $RCSfile: setup.py,v $ $Revision: 1.2 $
+# Version:     $RCSfile: setup.py,v $ $Revision: 1.3 $
 #
 # COPYRIGHT_BEGIN
 #
@@ -45,19 +45,19 @@
 # COPYRIGHT_END
 #############################################################################
 
-__revision__ = "$Revision: 1.2 $"[11:-2]
+__revision__ = "$Revision: 1.3 $"[11:-2]
 
 #############################################################################
 
 from   distutils.core import setup
 
 setup (name="epm",
-       version="0.3",
+       version="1.0.0",
        description="Elvin Presence Monitor",
        author="David Arnold",
        author_email="elvin@dstc.com",
        url="http://elvin.dstc.com/projects/ticker",
-       licence="Copyright (C) David Arnold, 2001.",
+       licence="Copyright (C) David Arnold, 2001-2002.",
        long_description="""This package provides a GTK application that implements the
        Elvin Presence Protocol, used to determine the availability and other
        information about users on a network.""",

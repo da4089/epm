@@ -1,5 +1,6 @@
 include epm
 include epmd
 include epm.conf
-include README NEWS COPYING
+include README NEWS COPYING TODO
 include doc/epp-0.4.html
+include status-online.xpm status-doubtful.xpm status-unavailable.xpm status-offline.xpm

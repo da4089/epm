@@ -4,11 +4,11 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.16 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.17 $
 #
 # COPYRIGHT_BEGIN
 #
-# Copyright:   (C) 2001, David Arnold.
+# Copyright:   (C) 2001-2002, David Arnold.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,7 @@ import elvin, gtk, os, random, sha, socket, sys, time
 ########################################################################
 
 # constants
-RELEASE          = "0.4"
+RELEASE          = "1.0.0"
 DEFAULT_STATUS   = ["Online", "Offline", "Unavailable", "Coffee"]
 PROTOCOL_VERSION = 1000
 
@@ -157,6 +157,10 @@ class PresenceInfo:
         return self._user
 
 
+    def get_status(self):
+        return self._status
+
+    
     def get_status_text(self):
         return self._status_text
 
@@ -244,7 +248,7 @@ class EPM(gtk.GtkWindow):
         self._groups_file = None  # user's ticker groups file
 
         self._groups = None       # user's groups
-        self._sub_users = None    # users for which the user wants status info
+        self._sub_users = None    # users for whom the user wants status info
         self._sub_groups = None   # groups for which the user wants status info
         self._statuses = None     # list of additional status names
         
@@ -252,6 +256,7 @@ class EPM(gtk.GtkWindow):
 
         self._buddies = {}        # record of buddies' statuses
 
+        # generate client identifier
         s = sha.new()
         s.update("%f %f" % (time.time(), random.random()))
         self._id = s.hexdigest()  # Client-ID
@@ -263,7 +268,7 @@ class EPM(gtk.GtkWindow):
             s = f.read()
             f.close()
 
-            #fixme: naughty, naughty
+            #fixme: naughty, very naughty!
             exec(s)
 
         # set default values
@@ -397,13 +402,35 @@ class EPM(gtk.GtkWindow):
         self._clist.set_column_width(2, 200)
         sw.add(self._clist)
 
-        # status dropdown
-        self._status = gtk.GtkCombo()
-        self._status.set_popdown_strings(self._statuses)
-        self._status.set_value_in_list(gtk.FALSE, gtk.FALSE)
-        self._status.set_use_arrows_always(gtk.TRUE)
-        self._status.show()
-        vbox.pack_start(self._status, fill=gtk.FILL_X, expand=gtk.FALSE)
+        # status text dropdown
+        self._status_text = gtk.GtkCombo()
+        self._status_text.set_popdown_strings(self._statuses)
+        self._status_text.set_value_in_list(gtk.FALSE, gtk.FALSE)
+        self._status_text.set_use_arrows_always(gtk.TRUE)
+        self._status_text.show()
+        vbox.pack_start(self._status_text, fill=gtk.FILL_X, expand=gtk.FALSE)
+        
+        # status radios
+        self._status = STATUS_ONLINE
+        
+        sbox = gtk.GtkHBox()
+        sbox.show()
+        vbox.pack_start(sbox, fill=gtk.FILL_X, expand=gtk.FALSE)
+
+        status_online = gtk.GtkRadioButton(None, "Active")
+        status_online.show()
+        sbox.pack_start(status_online, fill=gtk.FALSE, expand=gtk.FALSE, padding=5)
+        status_online.connect('button_press_event', self.set_status, STATUS_ONLINE)
+        
+        status_unavailable = gtk.GtkRadioButton(status_online, "Unavailable")
+        status_unavailable.show()
+        sbox.pack_start(status_unavailable, fill=gtk.FALSE, expand=gtk.FALSE, padding=5)
+        status_unavailable.connect('button_press_event', self.set_status, STATUS_UNAVAILABLE)
+
+        status_offline = gtk.GtkRadioButton(status_online, "Offline")
+        status_offline.show()
+        sbox.pack_start(status_offline, fill=gtk.FALSE, expand=gtk.FALSE, padding=5)
+        status_offline.connect('button_press_event', self.set_status, STATUS_OFFLINE)
         
         # button box
         bbox = gtk.GtkHButtonBox()
@@ -439,6 +466,27 @@ class EPM(gtk.GtkWindow):
         self._sb.show()
         vbox.pack_start(self._sb, fill=gtk.FILL_X, expand=gtk.FALSE)
 
+        # load images
+        self._pix_online, self._mask_online = \
+                          gtk.create_pixmap_from_xpm_d(self._clist,
+                                                       None, #gtk.GdkColor(0, 0, -1),
+                                                       status_online_data)
+        
+        self._pix_doubtful, self._mask_doubtful = \
+                          gtk.create_pixmap_from_xpm_d(self._clist,
+                                                       gtk.GdkColor(0, 0, -1),
+                                                       status_doubtful_data)
+        
+        self._pix_unavailable, self._mask_unavailable = \
+                          gtk.create_pixmap_from_xpm_d(self._clist,
+                                                       gtk.GdkColor(0, 0, -1),
+                                                       status_unavailable_data)
+        
+        self._pix_offline, self._mask_offline = \
+                          gtk.create_pixmap_from_xpm_d(self._clist,
+                                                       gtk.GdkColor(0, 0, -1),
+                                                       status_offline_data)
+        
         # launch midnight time updates
         now = time.time()
         tomorrow = now + 86400
@@ -537,22 +585,26 @@ class EPM(gtk.GtkWindow):
     def do_set(self, button, event):
         """Set your status."""
 
-        status = self._status.entry.get_text()
+        status = self._status_text.entry.get_text()
         if status not in self._statuses:
             self._statuses.append(status)
-            self._status.set_popdown_strings(self._statuses)
-            self._status.entry.set_text(status)
+            self._status_text.set_popdown_strings(self._statuses)
+            self._status_text.entry.set_text(status)
 
         self._change_time = time.time()
         self.update()
         return
 
+    def set_status(self, button, event, status=None):
+        """Callback from status radio buttons."""
+        self._status = status
+        return
     
     def advertise(self):
         """Advertise your initial presence status."""
 
-        self._send_info("initial", "online",
-                        self._status.entry.get_text(),
+        self._send_info("initial", self._status,
+                        self._status_text.entry.get_text(),
                         int(time.time() - self._change_time))
         return
 
@@ -560,8 +612,8 @@ class EPM(gtk.GtkWindow):
     def update(self):
         """Update your presence status."""
 
-        self._send_info("update", "online",
-                        self._status.entry.get_text(),
+        self._send_info("update", self._status,
+                        self._status_text.entry.get_text(),
                         int(time.time() - self._change_time))
         return
 
@@ -569,8 +621,8 @@ class EPM(gtk.GtkWindow):
     def handle_presence_rqst(self, sub, nfn, insec, rock):
         """Handle request for our presence status."""
 
-        self._send_info(nfn["Presence-Request"], "online",
-                        self._status.entry.get_text(),
+        self._send_info(nfn["Presence-Request"], self._status,
+                        self._status_text.entry.get_text(),
                         int(time.time() - self._change_time))
         return
 
@@ -606,6 +658,7 @@ class EPM(gtk.GtkWindow):
     def _send_info(self, xid, status, text, duration):
         """(Internal) Send Presence-Info notification."""
 
+        print "sending", status
         m = elvin.message()
         m["Presence-Protocol"] = PROTOCOL_VERSION
         m["Client-Id"] = self._id
@@ -660,33 +713,56 @@ class EPM(gtk.GtkWindow):
             buddy = self._buddies[name]
 
             if buddy.update(nfn):
-                self.set_buddy(name, buddy.get_last_update(), buddy.get_status_text())
+                self.set_buddy(name,
+                               buddy.get_last_update(),
+                               buddy.get_status_text(),
+                               buddy.get_status())
 
         else:
             # create new buddy record
             buddy = PresenceInfo(nfn)
             self._buddies[name] = buddy
             
-            self.set_buddy(name, buddy.get_last_update(), buddy.get_status_text())
+            self.set_buddy(name,
+                           buddy.get_last_update(),
+                           buddy.get_status_text(),
+                           buddy.get_status())
 
         return
 
 
-    def set_buddy(self, name, update, status):
-        
+    def set_buddy(self, name, update, text, status=STATUS_ONLINE):
+        """(Re)draw status line for specified buddy."""
+
+        # search for matching clist entry
         row = -1
         for i in range(self._clist.rows):
             if self._clist.get_text(i, 0) == name:
                 row = i
                 break
 
+        # create new row if needed
         if row == -1:
-            self._clist.append((str(name), update, str(status)))
+            self._clist.append((str(name), "pending", "pending"))
+            row = self._clist.rows - 1
 
+        # set icons
+        if status == STATUS_ONLINE:
+            pix = self._pix_online
+            mask = self._mask_online
+        elif status == STATUS_DOUBTFUL:
+            pix = self._pix_doubtful
+            mask = self._mask_doubtful
+        elif status == STATUS_UNAVAILABLE:
+            pix = self._pix_unavailable
+            mask = self._mask_unavailable
         else:
-            self._clist.set_text(row, 1, update)
-            self._clist.set_text(row, 2, status)
+            pix = self._pix_offline
+            mask = self._mask_offline
 
+        # set time and status
+        self._clist.set_text(row, 1, update)
+        self._clist.set_pixtext(row, 2, text, 5, pix, mask)
         return
 
 
@@ -695,7 +771,10 @@ class EPM(gtk.GtkWindow):
 
         # update UI
         for buddy in self._buddies.values():
-            self.set_buddy(buddy.get_name(), buddy.get_last_update(), buddy.get_status_text())
+            self.set_buddy(buddy.get_name(),
+                           buddy.get_last_update(),
+                           buddy.get_status_text(),
+                           buddy.get_status())
 
         # launch midnight time updates
         now = time.time()
@@ -768,6 +847,521 @@ class GroupsParser:
         return groups
             
 
+
+########################################################################
+
+status_online_data = [
+"30 20 110 2",
+"  	c None",
+". 	c #4F4F4D4D4141",
+"X 	c #545458583F3F",
+"o 	c #6E6E70706262",
+"O 	c #4E4E4F4F4747",
+"+ 	c #3E3E3E3E3434",
+"@ 	c #333334342222",
+"# 	c #1A1A1D1D0808",
+"$ 	c #1B1B1D1D1010",
+"% 	c #454544443F3F",
+"& 	c #FFFFFFFFF1F1",
+"* 	c #FFFFFFFFDFDF",
+"= 	c #F8F8EEEED5D5",
+"- 	c #FFFFF9F9E8E8",
+"; 	c #FFFFFDFDE7E7",
+": 	c #EFEFE4E4C8C8",
+"> 	c #FFFFFFFFE3E3",
+", 	c #D5D5CECEBBBB",
+"< 	c #0E0E07070000",
+"1 	c #EFEFEFEFD3D3",
+"2 	c #5F5F5F5F5555",
+"3 	c #FFFFFFFFECEC",
+"4 	c #FFFFE7E7C3C3",
+"5 	c #F0F0D5D5B8B8",
+"6 	c #FFFFE3E3CECE",
+"7 	c #FFFFE1E1C8C8",
+"8 	c #F6F6D9D9B7B7",
+"9 	c #E5E5CCCCADAD",
+"0 	c #A5A590907B7B",
+"q 	c #0F0F00000000",
+"w 	c #F9F9D9D9B3B3",
+"e 	c #DBDBB4B48D8D",
+"r 	c #525253534545",
+"t 	c #FFFFE4E4C6C6",
+"y 	c #FFFFE8E8D0D0",
+"u 	c #F7F7CBCBB0B0",
+"i 	c #383812120000",
+"p 	c #CCCCABAB8A8A",
+"a 	c #909075756262",
+"s 	c #1D1D04040000",
+"d 	c #515152524242",
+"f 	c #FCFCE2E2BDBD",
+"g 	c #FBFBDCDCBDBD",
+"h 	c #F3F3CECEB3B3",
+"j 	c #EDEDC6C6A7A7",
+"k 	c #1D1D00000000",
+"l 	c #D6D6B9B99797",
+"z 	c #8C8C77776464",
+"x 	c #0D0D00000000",
+"c 	c #383839392727",
+"v 	c #F9F9FAFAD8D8",
+"b 	c #F6F6E4E4BCBC",
+"n 	c #FFFFEDEDCDCD",
+"m 	c #ECECCECEB2B2",
+"M 	c #CACAA9A98888",
+"N 	c #BCBCA0A07979",
+"B 	c #A0A08C8C6969",
+"V 	c #66665B5B4747",
+"C 	c #0F0F08080202",
+"Z 	c #333336362323",
+"A 	c #FFFFFFFFE1E1",
+"S 	c #F5F5CFCFABAB",
+"D 	c #FFFFDCDCB8B8",
+"F 	c #EDEDC3C39B9B",
+"G 	c #A8A887876666",
+"H 	c #A0A08A8A7272",
+"J 	c #5C5C53534444",
+"K 	c #0D0D0D0D0505",
+"L 	c #EDEDF3F3D1D1",
+"P 	c #DBDBB1B18989",
+"I 	c #2C2C2F2F1E1E",
+"U 	c #FFFFDBDBB4B4",
+"Y 	c #F2F2C8C8A0A0",
+"T 	c #BCBC94947070",
+"R 	c #A6A687876868",
+"E 	c #131300000000",
+"W 	c #070700000000",
+"Q 	c #010100000000",
+"! 	c #B3B399998080",
+"~ 	c #2A2A2C2C1E1E",
+"^ 	c #F8F8FDFDDFDF",
+"/ 	c #F7F7D0D0A5A5",
+"( 	c #EFEFC5C59B9B",
+") 	c #E3E3BCBC9393",
+"_ 	c #89896E6E5353",
+"` 	c #757563635555",
+"' 	c #151510100C0C",
+"] 	c #AFAF8B8B6767",
+"[ 	c #8D8D78786363",
+"{ 	c #232325251A1A",
+"} 	c #ECECF0F0D9D9",
+"| 	c #E7E7C2C29898",
+" .	c #E7E7C1C19A9A",
+"..	c #9F9F80806363",
+"X.	c #141400000000",
+"o.	c #101003030000",
+"O.	c #030300000000",
+"+.	c #747464645757",
+"@.	c #171718181212",
+"#.	c #EEEEF1F1E0E0",
+"$.	c #C9C9ACAC8C8C",
+"%.	c #A6A689896B6B",
+"&.	c #56564F4F4949",
+"*.	c #000000000202",
+"=.	c #000002020000",
+"-.	c #141402020000",
+";.	c #101000000000",
+":.	c #0B0B00000000",
+">.	c #080800000000",
+",.	c #0A0A03030000",
+"                                                            ",
+"                                                            ",
+"                                                            ",
+"                                                            ",
+"        . X o O + @ # $             $ # @ + O o X .         ",
+"      % & * = - ; : > , <         < & * * ; 1 = * & %       ",
+"      2 3 4 5 6 7 8 9 0 q         q & * 4 7 w 5 e 0 2       ",
+"      r 1 w t y u i p a s         s 1 4 i u y t w a r       ",
+"      d > f g h j k l z x         x * 4 k w h g e 0 d       ",
+"      c v b n m M N B V C         C & 1 5 4 m e b V c       ",
+"      Z A S D F e G H J K         K L 4 1 P 5 D S a Z       ",
+"      I L U Y P T R E W Q         Q W E 4 m P Y ! a I       ",
+"      ~ ^ / ( ) k _ ` '             ' 4 5 k ) ) ] [ ~       ",
+"      { } |  .] ..X.o.O.            O.o.X...] ! +.+.{       ",
+"      @.#.$.%.! [ +.&.*.            *.] 0 ] a +.+.&.@.      ",
+"        =.-.;.:.>.,.Q                 Q ,.>.:.;.-.=.        ",
+"                                                            ",
+"                                                            ",
+"                                                            ",
+"                                                            "
+]
+
+status_doubtful_data = [
+"30 20 105 2",
+"  	c None",
+". 	c #FFFF00000000",
+"X 	c #4F4F4D4D4141",
+"o 	c #545458583F3F",
+"O 	c #6E6E70706262",
+"+ 	c #4E4E4F4F4747",
+"@ 	c #3E3E3E3E3434",
+"# 	c #454544443F3F",
+"$ 	c #FFFFFFFFF1F1",
+"% 	c #FFFFFFFFDFDF",
+"& 	c #F8F8EEEED5D5",
+"* 	c #FFFFF9F9E8E8",
+"= 	c #D5D5CECEBBBB",
+"- 	c #0E0E07070000",
+"; 	c #FFFFFDFDE7E7",
+": 	c #EFEFEFEFD3D3",
+"> 	c #5F5F5F5F5555",
+", 	c #FFFFFFFFECEC",
+"< 	c #FFFFE7E7C3C3",
+"1 	c #F0F0D5D5B8B8",
+"2 	c #FFFFE3E3CECE",
+"3 	c #FFFFE1E1C8C8",
+"4 	c #A5A590907B7B",
+"5 	c #0F0F00000000",
+"6 	c #F9F9D9D9B3B3",
+"7 	c #DBDBB4B48D8D",
+"8 	c #525253534545",
+"9 	c #FFFFE4E4C6C6",
+"0 	c #FFFFE8E8D0D0",
+"q 	c #F7F7CBCBB0B0",
+"w 	c #383812120000",
+"e 	c #CCCCABAB8A8A",
+"r 	c #909075756262",
+"t 	c #1D1D04040000",
+"y 	c #515152524242",
+"u 	c #FFFFFFFFE3E3",
+"i 	c #FCFCE2E2BDBD",
+"p 	c #FBFBDCDCBDBD",
+"a 	c #F3F3CECEB3B3",
+"s 	c #EDEDC6C6A7A7",
+"d 	c #1D1D00000000",
+"f 	c #D6D6B9B99797",
+"g 	c #8C8C77776464",
+"h 	c #0D0D00000000",
+"j 	c #383839392727",
+"k 	c #F9F9FAFAD8D8",
+"l 	c #F6F6E4E4BCBC",
+"z 	c #FFFFEDEDCDCD",
+"x 	c #ECECCECEB2B2",
+"c 	c #CACAA9A98888",
+"v 	c #BCBCA0A07979",
+"b 	c #A0A08C8C6969",
+"n 	c #66665B5B4747",
+"m 	c #0F0F08080202",
+"M 	c #333336362323",
+"N 	c #FFFFFFFFE1E1",
+"B 	c #F5F5CFCFABAB",
+"V 	c #FFFFDCDCB8B8",
+"C 	c #EDEDC3C39B9B",
+"Z 	c #A8A887876666",
+"A 	c #A0A08A8A7272",
+"S 	c #5C5C53534444",
+"D 	c #0D0D0D0D0505",
+"F 	c #DBDBB1B18989",
+"G 	c #2C2C2F2F1E1E",
+"H 	c #EDEDF3F3D1D1",
+"J 	c #FFFFDBDBB4B4",
+"K 	c #F2F2C8C8A0A0",
+"L 	c #BCBC94947070",
+"P 	c #A6A687876868",
+"I 	c #131300000000",
+"U 	c #070700000000",
+"Y 	c #010100000000",
+"T 	c #B3B399998080",
+"R 	c #2A2A2C2C1E1E",
+"E 	c #F8F8FDFDDFDF",
+"W 	c #F7F7D0D0A5A5",
+"Q 	c #EFEFC5C59B9B",
+"! 	c #E3E3BCBC9393",
+"~ 	c #89896E6E5353",
+"^ 	c #757563635555",
+"/ 	c #151510100C0C",
+"( 	c #AFAF8B8B6767",
+") 	c #8D8D78786363",
+"_ 	c #232325251A1A",
+"` 	c #ECECF0F0D9D9",
+"' 	c #E7E7C2C29898",
+"] 	c #E7E7C1C19A9A",
+"[ 	c #9F9F80806363",
+"{ 	c #141400000000",
+"} 	c #101003030000",
+"| 	c #030300000000",
+" .	c #747464645757",
+"..	c #171718181212",
+"X.	c #EEEEF1F1E0E0",
+"o.	c #C9C9ACAC8C8C",
+"O.	c #A6A689896B6B",
+"+.	c #56564F4F4949",
+"@.	c #000000000202",
+"#.	c #000002020000",
+"$.	c #141402020000",
+"%.	c #101000000000",
+"&.	c #0B0B00000000",
+"*.	c #080800000000",
+"=.	c #0A0A03030000",
+"                                                            ",
+"                        . . . . .                           ",
+"                    . . . . . . . . .                       ",
+"                  . . . . . . . . . . .                     ",
+"        X o O + . . . .           . . . . @ + O o X         ",
+"      # $ % & * . . . = -         - . . . ; : & % $ #       ",
+"      > , < 1 2 3 . . 4 5         5 . . . 3 6 1 7 4 >       ",
+"      8 : 6 9 0 q w e r t         t . . . q 0 9 6 r 8       ",
+"      y u i p a s d f g h         h . . . 6 a p 7 4 y       ",
+"      j k l z x c v b n m       . . . . 1 < x 7 l n j       ",
+"      M N B V C 7 Z A S D     . . . . < : F 1 V B r M       ",
+"      G H J K F L P I U Y     . . . U I < x F K T r G       ",
+"      R E W Q ! d ~ ^ /     . . .   / < 1 d ! ! ( ) R       ",
+"      _ ` ' ] ( [ { } |     . . .   | } { [ ( T  . ._       ",
+"      ..X.o.O.T )  .+.@.    . . .   @.( 4 ( r  . .+...      ",
+"        #.$.%.&.*.=.Y       . . .     Y =.*.&.%.$.#.        ",
+"                                                            ",
+"                            . . .                           ",
+"                            . . .                           ",
+"                                                            "
+]
+
+status_unavailable_data = [
+"30 20 91 1",
+" 	c None",
+".	c #FFFF00000000",
+"X	c #4F4F4D4D4141",
+"o	c #545458583F3F",
+"O	c #6E6E70706262",
+"+	c #1A1A1D1D0808",
+"@	c #1B1B1D1D1010",
+"#	c #454544443F3F",
+"$	c #FFFFFFFFF1F1",
+"%	c #FFFFFFFFDFDF",
+"&	c #F8F8EEEED5D5",
+"*	c #EFEFE4E4C8C8",
+"=	c #FFFFFFFFE3E3",
+"-	c #D5D5CECEBBBB",
+";	c #0E0E07070000",
+":	c #5F5F5F5F5555",
+">	c #FFFFFFFFECEC",
+",	c #FFFFE7E7C3C3",
+"<	c #FFFFE1E1C8C8",
+"1	c #F6F6D9D9B7B7",
+"2	c #E5E5CCCCADAD",
+"3	c #A5A590907B7B",
+"4	c #0F0F00000000",
+"5	c #DBDBB4B48D8D",
+"6	c #525253534545",
+"7	c #EFEFEFEFD3D3",
+"8	c #F9F9D9D9B3B3",
+"9	c #F7F7CBCBB0B0",
+"0	c #383812120000",
+"q	c #CCCCABAB8A8A",
+"w	c #909075756262",
+"e	c #1D1D04040000",
+"r	c #515152524242",
+"t	c #FCFCE2E2BDBD",
+"y	c #EDEDC6C6A7A7",
+"u	c #1D1D00000000",
+"i	c #D6D6B9B99797",
+"p	c #8C8C77776464",
+"a	c #0D0D00000000",
+"s	c #383839392727",
+"d	c #F9F9FAFAD8D8",
+"f	c #F6F6E4E4BCBC",
+"g	c #CACAA9A98888",
+"h	c #BCBCA0A07979",
+"j	c #A0A08C8C6969",
+"k	c #66665B5B4747",
+"l	c #0F0F08080202",
+"z	c #F0F0D5D5B8B8",
+"x	c #333336362323",
+"c	c #FFFFFFFFE1E1",
+"v	c #F5F5CFCFABAB",
+"b	c #A8A887876666",
+"n	c #A0A08A8A7272",
+"m	c #5C5C53534444",
+"M	c #0D0D0D0D0505",
+"N	c #EDEDF3F3D1D1",
+"B	c #DBDBB1B18989",
+"V	c #2C2C2F2F1E1E",
+"C	c #FFFFDBDBB4B4",
+"Z	c #BCBC94947070",
+"A	c #A6A687876868",
+"S	c #131300000000",
+"D	c #070700000000",
+"F	c #010100000000",
+"G	c #ECECCECEB2B2",
+"H	c #B3B399998080",
+"J	c #2A2A2C2C1E1E",
+"K	c #F8F8FDFDDFDF",
+"L	c #F7F7D0D0A5A5",
+"P	c #89896E6E5353",
+"I	c #757563635555",
+"U	c #151510100C0C",
+"Y	c #AFAF8B8B6767",
+"T	c #8D8D78786363",
+"R	c #232325251A1A",
+"E	c #ECECF0F0D9D9",
+"W	c #E7E7C2C29898",
+"Q	c #9F9F80806363",
+"!	c #141400000000",
+"~	c #030300000000",
+"^	c #101003030000",
+"/	c #747464645757",
+"(	c #171718181212",
+")	c #EEEEF1F1E0E0",
+"_	c #C9C9ACAC8C8C",
+"`	c #A6A689896B6B",
+"'	c #000000000202",
+"]	c #56564F4F4949",
+"[	c #000002020000",
+"{	c #141402020000",
+"}	c #101000000000",
+"                              ",
+"           ........           ",
+"         ............         ",
+"        ...        ...        ",
+"    XoO...+@      @....OoX    ",
+"   #$%&..*=-;    ;.....&%$#   ",
+"   :>,..<1234    ...,<..53:   ",
+"   678..90qwe   ...,09..8w6   ",
+"   r=t..yuipa  ...%,u8..53r   ",
+"   sdf..ghjkl ...l$7z,..fks   ",
+"   xcv..5bnmM... MN,7B..vwx   ",
+"   VNC..ZASD...  FDS,G..HwV   ",
+"   JKL..uPI...    U,zu..YTJ   ",
+"   REW..Q!...     ~^!Q..//R   ",
+"   ()_`.....      'Y3..//](   ",
+"    [{}....        F...}{[    ",
+"        ...        ...        ",
+"         ............         ",
+"           ........           ",
+"                              "
+]
+
+status_offline_data = [
+"30 20 111 2",
+"  	c None",
+". 	c #4F4F4D4D4141",
+"X 	c #545458583F3F",
+"o 	c #6E6E70706262",
+"O 	c #4E4E4F4F4747",
+"+ 	c #3E3E3E3E3434",
+"@ 	c #333334342222",
+"# 	c #1A1A1D1D0808",
+"$ 	c #1B1B1D1D1010",
+"% 	c #5F5F5F5F5555",
+"& 	c #454544443F3F",
+"* 	c #FFFFFFFFF1F1",
+"= 	c #FFFFFFFFDFDF",
+"- 	c #F8F8EEEED5D5",
+"; 	c #FFFFF9F9E8E8",
+": 	c #FFFFFDFDE7E7",
+"> 	c #EFEFE4E4C8C8",
+", 	c #FFFFFFFFE3E3",
+"< 	c #D5D5CECEBBBB",
+"1 	c #0E0E07070000",
+"2 	c #000000000000",
+"3 	c #FFFFFFFFECEC",
+"4 	c #FFFFE7E7C3C3",
+"5 	c #F0F0D5D5B8B8",
+"6 	c #FFFFE3E3CECE",
+"7 	c #FFFFE1E1C8C8",
+"8 	c #F6F6D9D9B7B7",
+"9 	c #E5E5CCCCADAD",
+"0 	c #A5A590907B7B",
+"q 	c #0F0F00000000",
+"w 	c #525253534545",
+"e 	c #EFEFEFEFD3D3",
+"r 	c #F9F9D9D9B3B3",
+"t 	c #FFFFE4E4C6C6",
+"y 	c #FFFFE8E8D0D0",
+"u 	c #F7F7CBCBB0B0",
+"i 	c #383812120000",
+"p 	c #CCCCABAB8A8A",
+"a 	c #909075756262",
+"s 	c #1D1D04040000",
+"d 	c #515152524242",
+"f 	c #FCFCE2E2BDBD",
+"g 	c #FBFBDCDCBDBD",
+"h 	c #F3F3CECEB3B3",
+"j 	c #EDEDC6C6A7A7",
+"k 	c #1D1D00000000",
+"l 	c #D6D6B9B99797",
+"z 	c #8C8C77776464",
+"x 	c #0D0D00000000",
+"c 	c #383839392727",
+"v 	c #F9F9FAFAD8D8",
+"b 	c #F6F6E4E4BCBC",
+"n 	c #FFFFEDEDCDCD",
+"m 	c #ECECCECEB2B2",
+"M 	c #CACAA9A98888",
+"N 	c #BCBCA0A07979",
+"B 	c #A0A08C8C6969",
+"V 	c #66665B5B4747",
+"C 	c #0F0F08080202",
+"Z 	c #333336362323",
+"A 	c #FFFFFFFFE1E1",
+"S 	c #F5F5CFCFABAB",
+"D 	c #FFFFDCDCB8B8",
+"F 	c #EDEDC3C39B9B",
+"G 	c #DBDBB4B48D8D",
+"H 	c #A8A887876666",
+"J 	c #A0A08A8A7272",
+"K 	c #5C5C53534444",
+"L 	c #0D0D0D0D0505",
+"P 	c #2C2C2F2F1E1E",
+"I 	c #EDEDF3F3D1D1",
+"U 	c #FFFFDBDBB4B4",
+"Y 	c #F2F2C8C8A0A0",
+"T 	c #DBDBB1B18989",
+"R 	c #BCBC94947070",
+"E 	c #A6A687876868",
+"W 	c #131300000000",
+"Q 	c #070700000000",
+"! 	c #010100000000",
+"~ 	c #2A2A2C2C1E1E",
+"^ 	c #F8F8FDFDDFDF",
+"/ 	c #F7F7D0D0A5A5",
+"( 	c #EFEFC5C59B9B",
+") 	c #E3E3BCBC9393",
+"_ 	c #89896E6E5353",
+"` 	c #757563635555",
+"' 	c #151510100C0C",
+"] 	c #232325251A1A",
+"[ 	c #ECECF0F0D9D9",
+"{ 	c #E7E7C2C29898",
+"} 	c #E7E7C1C19A9A",
+"| 	c #AFAF8B8B6767",
+" .	c #9F9F80806363",
+"..	c #141400000000",
+"X.	c #101003030000",
+"o.	c #030300000000",
+"O.	c #171718181212",
+"+.	c #EEEEF1F1E0E0",
+"@.	c #C9C9ACAC8C8C",
+"#.	c #A6A689896B6B",
+"$.	c #B3B399998080",
+"%.	c #8D8D78786363",
+"&.	c #747464645757",
+"*.	c #56564F4F4949",
+"=.	c #000000000202",
+"-.	c #000002020000",
+";.	c #141402020000",
+":.	c #101000000000",
+">.	c #0B0B00000000",
+",.	c #080800000000",
+"<.	c #0A0A03030000",
+"                                                            ",
+"                                                            ",
+"                                                            ",
+"                                                            ",
+"        . X o O + @ # $                   %                 ",
+"      & * = - ; : > , < 1         2       o       2         ",
+"      % 3 4 5 6 7 8 9 0 q           2     %     2           ",
+"      w e r t y u i p a s             o   o   o             ",
+"      d , f g h j k l z x                                   ",
+"      c v b n m M N B V C       % o % o       o % o %       ",
+"      Z A S D F G H J K L                                   ",
+"      P I U Y T R E W Q !             o   o   o             ",
+"      ~ ^ / ( ) k _ ` '             2     %     2           ",
+"      ] [ { } |  ...X.o.          2       o       2         ",
+"      O.+.@.#.$.%.&.*.=.                  %                 ",
+"        -.;.:.>.,.<.!                                       ",
+"                                                            ",
+"                                                            ",
+"                                                            ",
+"                                                            "
+]
 
 ########################################################################
 

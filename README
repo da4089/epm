@@ -2,7 +2,9 @@ epm README
 ----------
 
 copy the "epm.conf" file to your home directory, renaming it to
-".epm".  edit to taste.  be careful with the syntax -- it's Python ;-)
+".epm".  ensure it is not writable by anyone except yourself
+(ie. chmod 600 ~/.epm). edit to taste.  be careful with the syntax --
+it's Python ;-)
 
 run the epm script.
 
