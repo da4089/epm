@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.6 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.7 $
 # Copyright:   (C) 2001, David Arnold.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -85,10 +85,10 @@ class PresenceInfo:
 
         if self._time > midnight:
             offset = "today"
-        elif self._time < midnight and self._time >= midnight - 86400:
+        elif self._time < midnight and self._time >= (midnight - 86400):
             offset = "yesterday"
         else:
-            offset = "%u days ago" % int((time.time() - self._time) / 86400.0)
+            offset = "%u days ago" % int((midnight - self._time) / 86400.0) + 1
 
         hour = status_bits[3]
         if hour > 11:
