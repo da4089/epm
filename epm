@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.3 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.4 $
 # Copyright:   (C) 2001, David Arnold.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -27,9 +27,9 @@ import elvin, gtk, os, sha, socket, sys, time
 
 ########################################################################
 
-RELEASE        = "0.1"
-DEFAULT_STATUS = ["Online", "Offline", "Unavailable", "Coffee"]
-
+RELEASE          = "0.2"
+DEFAULT_STATUS   = ["Online", "Offline", "Unavailable", "Coffee"]
+PROTOCOL_VERSION = 1000
 # default config values
 
 USER       = os.environ.get("USER", os.environ.get("LOGNAME", "Anonymous Coward"))
@@ -62,8 +62,9 @@ class EPM(gtk.GtkWindow):
         self._sub_groups = None   # groups for which the user wants status info
         self._statuses = None     # list of additional status names
         
-        self._slist = []
-        self._ticker_groups = []
+        self._ticker_groups = ""  # string list of subscribed tickertape groups
+
+        self._buddies = {}        # record of buddies' statuses
         
         # read config file, if there is one
         cfile = "%s/.epm" % os.environ.get("HOME", "/")
@@ -164,8 +165,11 @@ class EPM(gtk.GtkWindow):
 
         # parse groups file
         parser = GroupsParser()
-        self._ticker_groups = parser.parse(self._groups_file)
-
+        groups = parser.parse(self._groups_file)
+        self._ticker_groups = reduce(lambda l,i:l+i+"|",
+                                     map(lambda i:i._name, self._ticker_groups),
+                                     "|")
+        
         # connect to Elvin router
         self._client = elvin.client(elvin.GtkLoop)
         self._elvin = self._client.connection()
@@ -197,7 +201,7 @@ class EPM(gtk.GtkWindow):
         self._clist.column_titles_passive()
         self._clist.set_sort_column(0)
         self._clist.set_column_width(0, 150)
-        self._clist.set_column_width(1, 50)
+        self._clist.set_column_width(1, 150)
         #self._clist.set_column_justification(1, gtk.JUSTIFY_RIGHT)
         self._clist.set_column_width(2, 200)
         sw.add(self._clist)
@@ -237,21 +241,21 @@ class EPM(gtk.GtkWindow):
             s = s + '|| User == "%s" ' % user
         s = s + ')'
 
-        print
-        print s
+        #print
+        #print s
         self._sub_info = self._elvin.subscribe(s, 1, None)
         self._sub_info.add_listener(self.handle_presence_info)
         self._sub_info.register()
 
         # subscribe for Presence-Info requests from others
-        s = 'require(Presence-Request) && (User == "%s@%s" || (User == "*" && (' % \
+        s = 'require(Presence-Request) && (contains(Users, "|%s@%s|") || (' % \
             (self._user, self._domain)
         for group in self._groups:
             s = s + 'contains(Groups, "|%s|") || ' % group
-        s = s + 'contains(Groups, "|%s|"))))' % self._domain
-
-        print
-        print s
+        s = s + 'contains(Groups, "|%s|")))' % self._domain
+            
+        #print
+        #print s
         self._sub_rqst = self._elvin.subscribe(s, 1, None)
         self._sub_rqst.add_listener(self.handle_presence_rqst)
         self._sub_rqst.register()
@@ -283,57 +287,64 @@ class EPM(gtk.GtkWindow):
         return
 
     
-    def do_close(self, button, event):
-        gtk.mainquit()
-
-
     def advertise(self):
         """Advertise your initial presence status."""
 
-        m = elvin.message()
-        m["Presence-Info"] = "initial"
-        m["Presence-Protocol"] = 1000
-        m["User"] = "%s@%s" % (self._user, self._domain)
-        m["Groups"] = reduce(lambda l,i:l+i+"|", self._groups, "|")
-        m["Chat-Groups"] = reduce(lambda l,i:l+i+"|", map(lambda i:i._name, self._ticker_groups), "|")
-        m["News-Groups"] = ""
-        m["Ticker-Client"] = "generic"
-        
-        m["Status-Duration"] = int(time.time() - self._change_time)
-        m["Status-Text"] = self._status.entry.get_text()
-
-        self._elvin.notify(m)
+        self._send_info("initial", "online",
+                        self._status.entry.get_text(),
+                        int(time.time() - self._change_time))
         return
 
 
     def update(self):
         """Update your presence status."""
-        
-        m = elvin.message()
-        m["Presence-Info"] = "update"
-        m["Presence-Protocol"] = 1000
-        m["User"] = "%s@%s" % (self._user, self._domain)
-        m["Groups"] = reduce(lambda l,i:l+i+"|", self._groups, "|")
-        
-        m["Status-Duration"] = int(time.time() - self._change_time)
-        m["Status-Text"] = self._status.entry.get_text()
 
-        self._elvin.notify(m)
+        self._send_info("update", "online",
+                        self._status.entry.get_text(),
+                        int(time.time() - self._change_time))
+        return
 
 
     def handle_presence_rqst(self, sub, nfn, insec, rock):
         """Handle request for our presence status."""
 
+        self._send_info(nfn["Presence-Request"], "online",
+                        self._status.entry.get_text(),
+                        int(time.time() - self._change_time))
+        return
+
+
+    def do_close(self, button, event):
+
+        self._send_info("update", "offline", "[epm client shutdown]", 0)
+        gtk.mainquit()
+        return
+
+
+    def _send_info(self, xid, status, text, duration):
+        """(Internal) Send Presence-Info notification."""
+
         m = elvin.message()
-        m["Presence-Info"] = nfn["Presence-Request"]
-        m["Presence-Protocol"] = 1000
+        m["Presence-Protocol"] = PROTOCOL_VERSION
+        m["User-Agent"] = "epm v%s (pe-%s/python-%d.%d/%s)" % \
+                          (RELEASE,
+                           elvin.config.release,
+                           sys.version_info[0],
+                           sys.version_info[1],
+                           os.name == "nt" and os.name or "%s-%s" % (os.uname()[0], os.uname()[2]))
+        
         m["User"] = "%s@%s" % (self._user, self._domain)
         m["Groups"] = reduce(lambda l,i:l+i+"|", self._groups, "|")
-        m["Chat-Groups"] = reduce(lambda l,i:l+i+"|", map(lambda i:i._name, self._ticker_groups), "|")
-        m["News-Groups"] = ""
-        m["Ticker-Client"] = "generic"
-        m["Status-Duration"] = int(time.time() - self._change_time)
-        m["Status-Text"] = self._status.entry.get_text()
+        m["Presence-Info"] = xid
+        
+        if xid != "update":
+            m["Chat-Groups"] = self._ticker_groups
+            m["News-Groups"] = ""
+            m["Ticker-Client"] = "generic"
+
+        m["Status"] = status
+        m["Status-Text"] = text
+        m["Status-Duration"] = duration
 
         self._elvin.notify(m)
         return
@@ -370,9 +381,29 @@ class EPM(gtk.GtkWindow):
         #    return
 
         # calculate time
-        duration = float(nfn["Status-Duration"])
-        bits = time.localtime(time.time() - duration)
-        start_str = "% u:%02u:%02u" % (bits[3], bits[4], bits[5])
+        status_duration = float(nfn["Status-Duration"])
+        status_time = time.time() - status_duration
+        status_bits = time.localtime(status_time)
+        now_bits = time.localtime(time.time())
+        midnight = time.mktime((now_bits[0], now_bits[1], now_bits[2], 0,0,0, 0,0,-1))
+
+        if status_time > midnight:
+            offset = "today"
+        elif status_time < midnight and status_time >= midnight - 86400:
+            offset = "yesterday"
+        else:
+            offset = "%u days ago" % int(status_duration / 86400.0)
+
+        hour = status_bits[3]
+        if hour > 11:
+            xm = "pm"
+            if hour > 13:
+                hour = hour - 12
+        else:
+            xm = "am"
+            
+        start_str = "% u:%02u%s %s" % (hour, status_bits[4], xm, offset)
+
         
         row = -1
         for i in range(self._clist.rows):
