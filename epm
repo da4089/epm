@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.13 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.14 $
 #
 # COPYRIGHT_BEGIN
 #
@@ -381,6 +381,11 @@ class EPM(gtk.GtkWindow):
         bbox.pack_start(b_remove, fill=gtk.FALSE, expand=gtk.TRUE, padding=5)
         b_remove.connect('button_press_event', self.do_remove)
 
+        b_refresh = gtk.GtkButton('Refresh')
+        b_refresh.show()
+        bbox.pack_start(b_refresh, fill=gtk.FALSE, expand=gtk.TRUE, padding=5)
+        b_refresh.connect('button_press_event', self.do_refresh)
+
         b_close = gtk.GtkButton('Exit')
         b_close.show()
         bbox.pack_start(b_close, fill=gtk.FALSE, expand=gtk.TRUE, padding=5)
@@ -538,6 +543,13 @@ class EPM(gtk.GtkWindow):
             name = self._clist.get_text(row, 0)
             del self._buddies[name]
             self._clist.remove(row)
+        
+        return
+
+    def do_refresh(self, button, event):
+        """Send a request to all buddies"""
+        
+        self.request(self._sub_users, self._sub_groups)
         
         return
 
