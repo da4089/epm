@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.11 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.12 $
 #
 # COPYRIGHT_BEGIN
 #
@@ -329,7 +329,7 @@ class EPM(gtk.GtkWindow):
             self._elvin.append_url(url)
 
         if self._scope:
-            self._elvin.set_scope(scope)
+            self._elvin.set_scope(self._scope)
 
         self._elvin.add_connection_listener(EPMConnectionListener(self))
 
@@ -683,7 +683,7 @@ class GroupsParser:
                 continue
 
             bits = line.split(":")
-            if len(bits) != 5:
+            if len(bits) < 5:
                 raise ParseError(line)
 
             g = ChatGroup()
