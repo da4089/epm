@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.12 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.13 $
 #
 # COPYRIGHT_BEGIN
 #
@@ -376,6 +376,11 @@ class EPM(gtk.GtkWindow):
         bbox.pack_start(b_set, fill=gtk.FALSE, expand=gtk.TRUE, padding=5)
         b_set.connect('button_press_event', self.do_set)
 
+        b_remove = gtk.GtkButton('Remove')
+        b_remove.show()
+        bbox.pack_start(b_remove, fill=gtk.FALSE, expand=gtk.TRUE, padding=5)
+        b_remove.connect('button_press_event', self.do_remove)
+
         b_close = gtk.GtkButton('Exit')
         b_close.show()
         bbox.pack_start(b_close, fill=gtk.FALSE, expand=gtk.TRUE, padding=5)
@@ -524,6 +529,17 @@ class EPM(gtk.GtkWindow):
                         int(time.time() - self._change_time))
         return
 
+
+    def do_remove(self, button, event):
+        """Remove a buddy from the list"""
+
+        while len(self._clist.selection) > 0:
+            row = self._clist.selection[0]
+            name = self._clist.get_text(row, 0)
+            del self._buddies[name]
+            self._clist.remove(row)
+        
+        return
 
     def do_close(self, button, event):
 
