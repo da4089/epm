@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.1 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.2 $
 # Copyright:   (C) 2001, David Arnold.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -72,8 +72,8 @@ class EPM(gtk.GtkWindow):
             s = f.read()
             f.close()
 
-        #fixme: naughty, naughty
-        exec(s)
+            #fixme: naughty, naughty
+            exec(s)
 
         self._user = USER
         self._domain = DOMAIN
