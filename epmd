@@ -1,0 +1,269 @@
+#! /usr/bin/env python
+#############################################################################
+#
+#              epmd
+#
+# File:        $Source: /home/d/work/personal/ticker-cvs/epm/epmd,v $
+# Version:     $RCSfile: epmd,v $ $Revision: 1.1 $
+# Copyright:   (C) 2001, David Arnold.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+#############################################################################
+
+import elvin, os, sha, socket, sys, time
+
+########################################################################
+
+RELEASE        = "0.1"
+WAIT_TIME      = 20.0
+
+GROUPS = None
+URLS = None
+SCOPE = None
+
+########################################################################
+
+class EPMDaemon:
+    """ """
+    
+    def __init__(self):
+        """ """
+
+        # initialise state
+        self._urls = []           # URLs for Elvin routers
+        self._scope = None        # Elvin router scope
+        self._groups = []         # groups to monitor
+        self._users = {}          # users and their status
+        self._debug = 0           # do debug?
+
+        # read config file, if there is one
+        cfile = "%s/.epmd" % os.environ.get("HOME", "/")
+        if os.path.exists(cfile):
+            f = open(cfile)
+            s = f.read()
+            f.close()
+
+            #fixme: naughty, naughty
+            exec(s)
+
+        if GROUPS:
+            self._groups = GROUPS
+        if URLS:
+            self._urls = URLS
+        if SCOPE:
+            self._scope = SCOPE
+
+        # parse command line args
+        argv = sys.argv[1:]
+        while len(argv):
+            arg = argv.pop(0)
+
+            if arg == "-e":
+                self._urls.append(argv.pop(0))
+            elif arg[:8] == "--elvin=":
+                self._urls.append(arg[8:])
+
+            elif arg == "-S":
+                self._scope = argv.pop(0)
+            elif arg[:8] == "--scope=":
+                self._scope = arg[8:]
+
+            elif arg == "-g":
+                self._groups = argv.pop(0)
+            elif arg[:9] == "--groups=":
+                self._groups = arg[9:]
+
+            elif arg in ("-d", "--debug"):
+                self._debug = 1
+
+            elif arg in ("-v", "--version"):
+                print RELEASE
+                sys.exit(0)
+
+            elif arg in ("-h", "-H", "-?", "--help"):
+                self.usage()
+                sys.exit(0)
+                
+            else:
+                self.usage()
+                sys.exit(1)
+
+        # search environment for undefined things
+        if not self._urls and os.environ.has_key("ELVIN_URL"):
+            self._urls.append(os.environ["ELVIN_URL"])
+
+        if not self._urls and not self._scope and os.environ.has_key("ELVIN_SCOPE"):
+            self._scope = os.environ["ELVIN_SCOPE"]
+
+        # debugging: print args 
+        if 0:
+            print self._urls
+            print self._scope
+            print self._groups
+            print self._debug
+            print
+            sys.exit(0)
+
+        # daemonise (very cheaply!)
+        if not self._debug:
+            res = os.fork()
+            if res:
+                sys.exit(0)
+            
+        # connect to Elvin router
+        self._client = elvin.client()
+        self._elvin = self._client.connection()
+
+        for url in self._urls:
+            self._elvin.append_url(url)
+
+        if self._scope:
+            self._elvin.set_scope(scope)
+
+        self._elvin.open()
+
+        # subscribe
+        self._rqst_sub = self._elvin.subscribe('require(Presence-Request)')
+        self._rqst_sub.add_listener(self.handle_presence_rqst)
+        self._rqst_sub.register()
+        
+        self._info_sub = self._elvin.subscribe('require(Presence-Info)')
+        self._info_sub.add_listener(self.handle_presence_info)
+        self._info_sub.register()
+        
+        # and run
+        try:
+            self._elvin.run()
+
+        except KeyboardInterrupt:
+            if self._debug: print "Exiting on SIGINT ..."
+            self._elvin.close()
+            self._client.close()
+            sys.exit(0)
+        return
+
+
+    def handle_presence_rqst(self, sub, nfn, insec, rock):
+        """Handle request for our presence status."""
+
+        user = self._users.get(nfn["User"])
+        
+        # do we know anything about this user?
+        if not user:
+            if nfn["User"] != "*" and self._debug:
+                print "    ignoring request for unknown user", nfn["User"]
+            return
+
+        # have we adopted them?
+        if user._adopted:
+            if self._debug: print "    advertising for adopted user", nfn["User"]
+            user.advertise(nfn)
+            return
+
+        # start timer
+        else:
+            if self._debug: print "    starting timer for known user", nfn["User"]
+            user._timeout = self._elvin.add_timeout(WAIT_TIME, user.adopt, nfn)
+
+        return
+
+        
+    def handle_presence_info(self, sub, nfn, insec, rock):
+        """Handle advertised presence info."""
+
+        # if it's from a proxy, ignore it
+        if nfn.has_key("Proxy"):
+            return
+
+        # if we already know about them, update
+        if self._users.has_key(nfn["User"]):
+            self._users[nfn["User"]].set(nfn)
+
+        # otherwise, create a new user record
+        else:
+            self._users[nfn["User"]] = UserStatus(self, nfn)
+
+        return
+
+
+class UserStatus:
+
+    def __init__(self, daemon, nfn):
+        self._daemon = daemon
+        self._info = {}
+        self._adopted = 0
+        self._timeout = None
+        
+        self.set(nfn)
+        return
+
+
+    def set(self, nfn):
+        """ """
+        
+        self._info.update(nfn._attrs)
+        self._timestamp = time.time() - float(nfn["Status-Duration"])
+
+        if self._daemon._debug: print "    got update for user", self._info["User"]
+
+        if self._adopted:
+            if self._daemon._debug: print "*** spurning user", self._info["User"]
+            self._adopted = 0
+
+        if self._timeout:
+            if self._daemon._debug: print "    cancelling timer for user", nfn["User"]
+            self._daemon._elvin.remove_timeout(self._timeout)
+            self._timeout = None
+        return
+
+
+    def adopt(self, timeout, rock):
+        self._timeout = None
+        if self._daemon._debug: print "*** adopting user", self._info["User"]
+        self._adopted = 1
+        self.advertise(rock)
+        return
+
+
+    def advertise(self, rqst):
+        """Send the recorded status of the user."""
+
+        m = elvin.message(self._info)
+        m["Presence-Info"] = rqst["Presence-Request"]
+        m["Status-Duration"] = int(time.time() - self._timestamp)
+        m["Proxy"] = 1
+        self._daemon._elvin.notify(m)
+        return
+
+
+
+
+
+
+
+
+########################################################################
+
+if __name__ == "__main__":
+    EPMDaemon()
+    
+
+########################################################################
+# Local Variables:
+# mode: python
+# End:
+########################################################################
+# end of epmd
