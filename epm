@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.2 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.3 $
 # Copyright:   (C) 2001, David Arnold.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -179,7 +179,7 @@ class EPM(gtk.GtkWindow):
         self._elvin.open()
 
         # initialise window
-        gtk.GtkWindow.__init__(self, type=gtk.WINDOW_TOPLEVEL, title="gtp")
+        gtk.GtkWindow.__init__(self, type=gtk.WINDOW_TOPLEVEL, title="epm")
         self.set_default_size(400, 300)
         
         vbox = gtk.GtkVBox()
@@ -197,8 +197,8 @@ class EPM(gtk.GtkWindow):
         self._clist.column_titles_passive()
         self._clist.set_sort_column(0)
         self._clist.set_column_width(0, 150)
-        #self._clist.set_column_width(1, 50)
-        self._clist.set_column_justification(1, gtk.JUSTIFY_RIGHT)
+        self._clist.set_column_width(1, 50)
+        #self._clist.set_column_justification(1, gtk.JUSTIFY_RIGHT)
         self._clist.set_column_width(2, 200)
         sw.add(self._clist)
 
@@ -262,9 +262,6 @@ class EPM(gtk.GtkWindow):
 
         # request info from buddies
         self.request(self._sub_users, self._sub_groups)
-
-        # start ageing thread
-        self._elvin.add_timeout(10.0, self.do_ageing, None)
 
         # show and run
         self.show()
@@ -367,9 +364,15 @@ class EPM(gtk.GtkWindow):
         """Handle advertised presence info for one of our subscribers."""
 
         #print nfn["User"]
-        
-        if str(nfn["User"]) == "%s@%s" % (self._user, self._domain):
-            return
+
+        # ignore ourselves
+        #if str(nfn["User"]) == "%s@%s" % (self._user, self._domain):
+        #    return
+
+        # calculate time
+        duration = float(nfn["Status-Duration"])
+        bits = time.localtime(time.time() - duration)
+        start_str = "% u:%02u:%02u" % (bits[3], bits[4], bits[5])
         
         row = -1
         for i in range(self._clist.rows):
@@ -379,25 +382,12 @@ class EPM(gtk.GtkWindow):
 
         if row == -1:
             self._clist.append((str(nfn["User"]),
-                               str(nfn["Status-Duration"]),
+                               start_str,
                                str(nfn["Status-Text"])))
         else:
-            self._clist.set_text(row, 1, str(nfn["Status-Duration"]))
+            self._clist.set_text(row, 1, start_str)
             self._clist.set_text(row, 2, str(nfn["Status-Text"]))
 
-        return
-
-
-    def do_ageing(self, timeout, rock):
-        """Age all times"""
-
-        self._clist.freeze()
-        for i in range(self._clist.rows):
-            ctime = int(self._clist.get_text(i, 1))
-            self._clist.set_text(i, 1, str(ctime + 10))
-        self._clist.thaw()
-
-        self._elvin.add_timeout(10.0, self.do_ageing, None)
         return
 
 
