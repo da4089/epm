@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.5 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.6 $
 # Copyright:   (C) 2001, David Arnold.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -66,6 +66,10 @@ class PresenceInfo:
             return 1
         
         return 0
+
+
+    def get_name(self):
+        return self._user
 
 
     def get_status_text(self):
@@ -335,6 +339,14 @@ class EPM(gtk.GtkWindow):
         self._sb.show()
         vbox.pack_start(self._sb, fill=gtk.FILL_X, expand=gtk.FALSE)
 
+        # launch midnight time updates
+        now = time.time()
+        tomorrow = now + 86400
+        bits = time.localtime(tomorrow)
+        midnight = time.mktime((bits[0], bits[1], bits[2], 0, 0, 0, 0, 0, -1))
+        self._elvin.add_timeout(midnight - now, self.rollover, None)
+
+        # initiate connection to elvin
         self._elvin.add_timeout(1, self.connect, None)
 
         # show gui
@@ -547,6 +559,24 @@ class EPM(gtk.GtkWindow):
         return
 
 
+    def rollover(self, timeout, rock):
+        """Roll update times over to new day."""
+
+        # update UI
+        for buddy in self._buddies.values():
+            self.set_buddy(buddy.get_name(), buddy.get_last_update(), buddy.get_status_text())
+
+        # launch midnight time updates
+        now = time.time()
+        tomorrow = now + 86400
+        bits = time.localtime(tomorrow)
+        midnight = time.mktime((bits[0], bits[1], bits[2], 0, 0, 0, 0, 0, -1))
+        self._elvin.add_timeout(midnight - now, self.rollover, None)
+
+        return
+
+        
+########################################################################
 
 class ChatGroup:
     def __init__(self):
@@ -556,6 +586,8 @@ class ChatGroup:
         self._min = -1
         self._max = -1
 
+
+########################################################################
 
 class GroupsParser:
     """ """
