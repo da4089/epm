@@ -1,0 +1,10 @@
+epm README
+----------
+
+copy the "epm.conf" file to your home directory, renaming it to
+".epm".  edit to taste.  be careful with the syntax -- it's Python ;-)
+
+run the epm script.
+
+command-line args are the same as xtickertape.
+

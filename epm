@@ -1,0 +1,468 @@
+#! /usr/bin/env python
+#############################################################################
+#
+#              epm
+#
+# File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
+# Version:     $RCSfile: epm,v $ $Revision: 1.1 $
+# Copyright:   (C) 2001, David Arnold.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+#############################################################################
+
+import elvin, gtk, os, sha, socket, sys, time
+
+########################################################################
+
+RELEASE        = "0.1"
+DEFAULT_STATUS = ["Online", "Offline", "Unavailable", "Coffee"]
+
+# default config values
+
+USER       = os.environ.get("USER", os.environ.get("LOGNAME", "Anonymous Coward"))
+DOMAIN     = socket.gethostname()
+GROUPS     = []
+
+SUB_USERS  = []
+SUB_GROUPS = []
+
+STATUS     = []
+
+
+########################################################################
+
+class EPM(gtk.GtkWindow):
+    """ """
+    
+    def __init__(self):
+        """ """
+
+        # initialise state
+        self._urls = []           # URLs for Elvin routers
+        self._scope = None        # Elvin router scope
+        self._user = None         # user name, no domain
+        self._domain = None       # user's default domain
+        self._groups_file = None  # user's ticker groups file
+
+        self._groups = None       # user's groups
+        self._sub_users = None    # users for which the user wants status info
+        self._sub_groups = None   # groups for which the user wants status info
+        self._statuses = None     # list of additional status names
+        
+        self._slist = []
+        self._ticker_groups = []
+        
+        # read config file, if there is one
+        cfile = "%s/.epm" % os.environ.get("HOME", "/")
+        if os.path.exists(cfile):
+            f = open(cfile)
+            s = f.read()
+            f.close()
+
+        #fixme: naughty, naughty
+        exec(s)
+
+        self._user = USER
+        self._domain = DOMAIN
+        self._groups = GROUPS
+        self._sub_users = SUB_USERS
+        self._sub_groups = SUB_GROUPS
+        self._statuses = DEFAULT_STATUS + STATUS
+
+        # parse command line args
+        argv = sys.argv[1:]
+        while len(argv):
+            arg = argv.pop(0)
+
+            if arg == "-e":
+                self._urls.append(argv.pop(0))
+            elif arg[:8] == "--elvin=":
+                self._urls.append(arg[8:])
+
+            elif arg == "-S":
+                self._scope = argv.pop(0)
+            elif arg[:8] == "--scope=":
+                self._scope = arg[8:]
+
+            elif arg == "-u":
+                self._user = argv.pop(0)
+            elif arg[:7] == "--user=":
+                self._user = arg[7:]
+
+            elif arg == "-D":
+                self._domain = argv.pop(0)
+            elif arg[:9] == "--domain=":
+                self._domain = arg[9:]
+
+            elif arg == "-G":
+                self._groups_file = argv.pop(0)
+            elif arg[:9] == "--groups=":
+                self._groups_file = arg[9:]
+
+            elif arg in ("-d", "--daemon"):
+                self._daemon = 1
+
+            elif arg in ("-v", "--version"):
+                print RELEASE
+                sys.exit(0)
+
+            elif arg in ("-h", "-H", "-?", "--help"):
+                self.usage()
+                sys.exit(0)
+                
+            else:
+                self.usage()
+                sys.exit(1)
+
+        # search environment for undefined things
+        if not self._urls and os.environ.has_key("ELVIN_URL"):
+            self._urls.append(os.environ["ELVIN_URL"])
+
+        if not self._urls and not self._scope and os.environ.has_key("ELVIN_SCOPE"):
+            self._scope = os.environ["ELVIN_SCOPE"]
+
+        if not self._user and os.environ.has_key("USER"):
+            self._user = os.environ["USER"]
+            
+        if not self._user and os.environ.has_key("LOGNAME"):
+            self._user = os.environ["LOGNAME"]
+
+        if not self._domain and os.environ.has_key("DOMAIN"):
+            self._domain = os.environ["DOMAIN"]
+
+        # validate args settings
+        if self._groups_file and not os.path.exists(self._groups_file):
+            self.usage()
+            sys.exit(1)
+
+        # debugging: print args 
+        if 0:
+            print self._urls
+            print self._scope
+            print self._user
+            print self._domain
+            print self._groups_file
+            print
+            print self._groups
+            print self._sub_users
+            print self._sub_groups
+                
+            sys.exit(0)
+
+        # parse groups file
+        parser = GroupsParser()
+        self._ticker_groups = parser.parse(self._groups_file)
+
+        # connect to Elvin router
+        self._client = elvin.client(elvin.GtkLoop)
+        self._elvin = self._client.connection()
+
+        for url in self._urls:
+            self._elvin.append_url(url)
+
+        if self._scope:
+            self._elvin.set_scope(scope)
+
+        self._elvin.open()
+
+        # initialise window
+        gtk.GtkWindow.__init__(self, type=gtk.WINDOW_TOPLEVEL, title="gtp")
+        self.set_default_size(400, 300)
+        
+        vbox = gtk.GtkVBox()
+        vbox.show()
+        self.add(vbox)
+
+        sw = gtk.GtkScrolledWindow()
+        sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        sw.show()
+        vbox.pack_start(sw, fill=gtk.TRUE, expand=gtk.TRUE)
+
+        # status list
+        self._clist = gtk.GtkCList(3, ["User", "Time", "Status"])
+        self._clist.show()
+        self._clist.column_titles_passive()
+        self._clist.set_sort_column(0)
+        self._clist.set_column_width(0, 150)
+        #self._clist.set_column_width(1, 50)
+        self._clist.set_column_justification(1, gtk.JUSTIFY_RIGHT)
+        self._clist.set_column_width(2, 200)
+        sw.add(self._clist)
+
+        # status dropdown
+        self._status = gtk.GtkCombo()
+        self._status.set_popdown_strings(self._statuses)
+        self._status.set_value_in_list(gtk.FALSE, gtk.FALSE)
+        self._status.set_use_arrows_always(gtk.TRUE)
+        self._status.show()
+        vbox.pack_start(self._status, fill=gtk.FILL_X, expand=gtk.FALSE)
+        
+        # button box
+        bbox = gtk.GtkHButtonBox()
+        bbox.set_border_width(10)
+        bbox.show()
+        vbox.pack_start(bbox, fill=gtk.FILL_X, expand=gtk.FALSE)
+
+        b_set = gtk.GtkButton('Set')
+        b_set.show()
+        bbox.pack_start(b_set, fill=gtk.FALSE, expand=gtk.TRUE, padding=5)
+        b_set.connect('button_press_event', self.do_set)
+
+        b_close = gtk.GtkButton('Close')
+        b_close.show()
+        bbox.pack_start(b_close, fill=gtk.FALSE, expand=gtk.TRUE, padding=5)
+        b_close.connect('button_press_event', self.do_close)
+
+        # subscribe for Presence-Info notifications from others
+        s = 'require(Presence-Info) && ('
+
+        for group in self._sub_groups:
+            s = s + 'contains(Groups, "|%s|") || ' % group
+        s = s + 'contains(Groups, "|%s|") ' % self._domain
+
+        for user in self._sub_users:
+            s = s + '|| User == "%s" ' % user
+        s = s + ')'
+
+        print
+        print s
+        self._sub_info = self._elvin.subscribe(s, 1, None)
+        self._sub_info.add_listener(self.handle_presence_info)
+        self._sub_info.register()
+
+        # subscribe for Presence-Info requests from others
+        s = 'require(Presence-Request) && (User == "%s@%s" || (User == "*" && (' % \
+            (self._user, self._domain)
+        for group in self._groups:
+            s = s + 'contains(Groups, "|%s|") || ' % group
+        s = s + 'contains(Groups, "|%s|"))))' % self._domain
+
+        print
+        print s
+        self._sub_rqst = self._elvin.subscribe(s, 1, None)
+        self._sub_rqst.add_listener(self.handle_presence_rqst)
+        self._sub_rqst.register()
+
+        # advertise initial status
+        self._change_time = time.time()
+        self.advertise()
+
+        # request info from buddies
+        self.request(self._sub_users, self._sub_groups)
+
+        # start ageing thread
+        self._elvin.add_timeout(10.0, self.do_ageing, None)
+
+        # show and run
+        self.show()
+        gtk.mainloop()
+        return
+
+
+    def do_set(self, button, event):
+        """Set your status."""
+
+        status = self._status.entry.get_text()
+        if status not in self._statuses:
+            self._statuses.append(status)
+            self._status.set_popdown_strings(self._statuses)
+            self._status.entry.set_text(status)
+
+        self._change_time = time.time()
+        self.update()
+        return
+
+    
+    def do_close(self, button, event):
+        gtk.mainquit()
+
+
+    def advertise(self):
+        """Advertise your initial presence status."""
+
+        m = elvin.message()
+        m["Presence-Info"] = "initial"
+        m["Presence-Protocol"] = 1000
+        m["User"] = "%s@%s" % (self._user, self._domain)
+        m["Groups"] = reduce(lambda l,i:l+i+"|", self._groups, "|")
+        m["Chat-Groups"] = reduce(lambda l,i:l+i+"|", map(lambda i:i._name, self._ticker_groups), "|")
+        m["News-Groups"] = ""
+        m["Ticker-Client"] = "generic"
+        
+        m["Status-Duration"] = int(time.time() - self._change_time)
+        m["Status-Text"] = self._status.entry.get_text()
+
+        self._elvin.notify(m)
+        return
+
+
+    def update(self):
+        """Update your presence status."""
+        
+        m = elvin.message()
+        m["Presence-Info"] = "update"
+        m["Presence-Protocol"] = 1000
+        m["User"] = "%s@%s" % (self._user, self._domain)
+        m["Groups"] = reduce(lambda l,i:l+i+"|", self._groups, "|")
+        
+        m["Status-Duration"] = int(time.time() - self._change_time)
+        m["Status-Text"] = self._status.entry.get_text()
+
+        self._elvin.notify(m)
+
+
+    def handle_presence_rqst(self, sub, nfn, insec, rock):
+        """Handle request for our presence status."""
+
+        m = elvin.message()
+        m["Presence-Info"] = nfn["Presence-Request"]
+        m["Presence-Protocol"] = 1000
+        m["User"] = "%s@%s" % (self._user, self._domain)
+        m["Groups"] = reduce(lambda l,i:l+i+"|", self._groups, "|")
+        m["Chat-Groups"] = reduce(lambda l,i:l+i+"|", map(lambda i:i._name, self._ticker_groups), "|")
+        m["News-Groups"] = ""
+        m["Ticker-Client"] = "generic"
+        m["Status-Duration"] = int(time.time() - self._change_time)
+        m["Status-Text"] = self._status.entry.get_text()
+
+        self._elvin.notify(m)
+        return
+
+
+    def request(self, users, groups):
+        """Request status from buddies."""
+
+        m = elvin.message()
+        m["Presence-Request"] = sha.new(str(time.time()) + str(os.getpid())).hexdigest()
+        m["Presence-Protocol"] = 1000
+        m["Groups"] = reduce(lambda l,i:l+i+"|", groups, "|")
+        m["User"] = "*"
+        self._elvin.notify(m)
+
+        m = elvin.message()
+        m["Presence-Request"] = sha.new(str(time.time()) + str(os.getpid())).hexdigest()
+        m["Presence-Protocol"] = 1000
+
+        for user in users:
+            m["User"] = user
+            self._elvin.notify(m)
+
+        return
+        
+        
+    def handle_presence_info(self, sub, nfn, insec, rock):
+        """Handle advertised presence info for one of our subscribers."""
+
+        #print nfn["User"]
+        
+        if str(nfn["User"]) == "%s@%s" % (self._user, self._domain):
+            return
+        
+        row = -1
+        for i in range(self._clist.rows):
+            if self._clist.get_text(i, 0) == str(nfn["User"]):
+                row = i
+                break
+
+        if row == -1:
+            self._clist.append((str(nfn["User"]),
+                               str(nfn["Status-Duration"]),
+                               str(nfn["Status-Text"])))
+        else:
+            self._clist.set_text(row, 1, str(nfn["Status-Duration"]))
+            self._clist.set_text(row, 2, str(nfn["Status-Text"]))
+
+        return
+
+
+    def do_ageing(self, timeout, rock):
+        """Age all times"""
+
+        self._clist.freeze()
+        for i in range(self._clist.rows):
+            ctime = int(self._clist.get_text(i, 1))
+            self._clist.set_text(i, 1, str(ctime + 10))
+        self._clist.thaw()
+
+        self._elvin.add_timeout(10.0, self.do_ageing, None)
+        return
+
+
+class ChatGroup:
+    def __init__(self):
+        self._name = ""
+        self._menu = 0
+        self._auto = 0
+        self._min = -1
+        self._max = -1
+
+
+class GroupsParser:
+    """ """
+
+    def __init__(self):
+        """ """
+
+        return
+
+
+    def parse(self, file=None):
+        """ """
+
+        groups = []
+        
+        if not file:
+            file = "%s/.ticker/groups" % os.environ.get("HOME", "")
+
+        f = open(file)
+        while 1:
+            line = f.readline()
+            if not line:
+                break
+
+            elif len(line.strip()) == 0 or line.strip()[0] == "#":
+                continue
+
+            bits = line.split(":")
+            if len(bits) != 5:
+                raise ParseError(line)
+
+            g = ChatGroup()
+            g._min = int(bits[3])
+            g._max = int(bits[4])
+            g._auto = bits[2].lower() == "auto"
+            g._menu = bits[1].lower() == "menu"
+            g._name = bits[0]
+
+            groups.append(g)
+
+        f.close()
+        return groups
+            
+
+
+########################################################################
+
+if __name__ == "__main__":
+    EPM()
+    
+
+########################################################################
+# Local Variables:
+# mode: python
+# End:
+########################################################################
+# end of epm
