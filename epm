@@ -4,7 +4,7 @@
 #              epm
 #
 # File:        $Source: /home/d/work/personal/ticker-cvs/epm/epm,v $
-# Version:     $RCSfile: epm,v $ $Revision: 1.18 $
+# Version:     $RCSfile: epm,v $ $Revision: 1.19 $
 #
 # COPYRIGHT_BEGIN
 #
@@ -377,6 +377,7 @@ class EPM(gtk.GtkWindow):
             self._elvin.set_scope(self._scope)
 
         self._elvin.add_connection_listener(EPMConnectionListener(self))
+        self._elvin.set_keepalive_interval(120)
 
         # initialise window
         gtk.GtkWindow.__init__(self, type=gtk.WINDOW_TOPLEVEL, title="epm")
